@@ -1,8 +1,97 @@
 <html>
-	<head>
-		<title>DSM Utilities by Cuteribs</title>
-	</head>
-	<body>
-		Fooo
-	</body>
+
+<head>
+	<title>DSM Utilities by Cuteribs</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="./semantic.min.css">
+</head>
+
+<body>
+	<div class="ui container">
+		<h2 class="ui dividing header">SN 生成器</h2>
+		<div class="ui labeled action icon input sn" data-prefix="1130LWN">
+			<div class="ui label">DS3615xs</div>
+			<input type="text" placeholder="SN" readonly="readonly">
+			<div class="ui teal button">生成</div>
+		</div>
+		<div class="ui divider"></div>
+		<div class="ui labeled action icon input sn" data-prefix="1130ODN">
+			<div class="ui label">DS3617xs</div>
+			<input type="text" placeholder="SN" readonly="readonly">
+			<div class="ui teal button">生成</div>
+		</div>
+		<div class="ui divider"></div>
+		<div class="ui labeled action icon input sn" data-prefix="16A0NZN">
+			<div class="ui label">DS916+</div>
+			<input type="text" placeholder="SN" readonly="readonly">
+			<div class="ui teal button">生成</div>
+		</div>
+		<div class="ui divider"></div>
+		<h2 class="ui dividing header">MAC 生成器</h2>
+		<div class="ui labeled action icon input mac">
+			<input type="text" placeholder="MAC" readonly="readonly">
+			<div class="ui teal button">生成</div>
+		</div>
+		<div class="ui divider"></div>
+		<h2 class="ui dividing header">TELNET 今日修复密码</h2>
+		<div class="ui label password"></div>
+		<div class="ui label">备用密码 101-0101</div>
+		<div class="ui divider"></div>
+	</div>
+
+	<script src="./jquery.slim.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			if (!String.prototype.padLeft) {
+				String.prototype.padLeft = function (length, str) {
+					str = str || ' ';
+					return this.length >= length
+						? this
+						: (new Array(Math.ceil((length - this.length) / str.length) + 1).join(str)).substr(0, (length - this.length)) + this;
+				};
+			}
+
+			var generateSN = function (prefix) {
+				var suffix = Math.floor(Math.random() * 1000000).toString();
+				return prefix + suffix.padLeft(6, '0');
+			};
+
+			var generateMac = function () {
+				var suffix = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase();
+				return "001132" + suffix.padLeft(6, '0');
+			};
+
+			var getPassword = function () {
+				var today = new Date();
+				var month = today.getMonth() + 1;
+				var day = today.getDate();
+				return month.toString().substr(0, 1) + month.toString().padLeft(2, '0') + '-' + day.toString(16).padLeft(2, '0') + gcd(month, day).toString().padLeft(2, '0');
+			};
+
+			var gcd = function (a, b) {
+				if (!b) {
+					return a;
+				}
+
+				return gcd(b, a % b);
+			};
+
+			$('.sn').on('click', '.button', function () {
+				var $this = $(this);
+				var prefix = $this.parent().data('prefix');
+				$this.siblings('input:text').val(generateSN(prefix));
+			});
+
+			$('.mac').on('click', '.button', function () {
+				var $this = $(this);
+				$this.siblings('input:text').val(generateMac());
+			});
+
+			$('.password').text(getPassword());
+
+
+		});
+	</script>
+</body>
+
 </html>
