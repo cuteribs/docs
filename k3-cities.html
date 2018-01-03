@@ -9,11 +9,13 @@
 <body>
 	<div class="ui container">
 		<h2 class="ui dividing header">K3 外屏天气地区码搜索</h2>
-		<div class="ui labeled action icon input sn">
-			<div class="ui label">地区名</div>
-			<input type="text" placeholder="keyword" readonly="readonly">
-			<div class="ui teal button">搜索</div>
-			<div class="ui label code">123123</div>
+		<div class="ui labeled input">
+			<input type="text" placeholder="地区名" id="keyword">
+
+			<div class="ui label" id="province"></div>
+			<div class="ui label" id="city"></div>
+			<div class="ui label" id="county"></div>
+			<div class="ui label" id="code"></div>
 		</div>
 	</div>
 
@@ -21,54 +23,29 @@
 	<script src="./k3-cities.js"></script>
 	<script>
 		$(document).ready(function () {
-			if (!String.prototype.padLeft) {
-				String.prototype.padLeft = function (length, str) {
-					str = str || ' ';
-					return this.length >= length
-						? this
-						: (new Array(Math.ceil((length - this.length) / str.length) + 1).join(str)).substr(0, (length - this.length)) + this;
-				};
-			}
+			$('#keyword').on('change', function (e) {
+				var keyword = $(this).val();
 
-			var generateSN = function (prefix) {
-				var suffix = Math.floor(Math.random() * 1000000).toString();
-				return prefix + suffix.padLeft(6, '0');
-			};
+				for (var i = 0; i < allList.length; i++) {
+					var provice = allList[i];
 
-			var generateMac = function () {
-				var suffix = Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase();
-				return "001132" + suffix.padLeft(6, '0');
-			};
+					for (var j = 0; j < provice.cityList.length; j++) {
+						var city = provice.cityList[j];
 
-			var getPassword = function () {
-				var today = new Date();
-				var month = today.getMonth() + 1;
-				var day = today.getDate();
-				return month.toString().substr(0, 1) + month.toString().padLeft(2, '0') + '-' + day.toString(16).padLeft(2, '0') + gcd(month, day).toString().padLeft(2, '0');
-			};
+						for (var k = 0; k < city.countyList.length; k++) {
+							var county = city.countyList[k];
 
-			var gcd = function (a, b) {
-				if (!b) {
-					return a;
+							if (county && county.id && county.value.indexOf(keyword) > -1) {
+								$('#province').text(provice.value);
+								$('#city').text(city.value);
+								$('#county').text(county.value);
+								$('#code').text(county.id);
+								return;
+							}
+						}
+					}
 				}
-
-				return gcd(b, a % b);
-			};
-
-			$('.sn').on('click', '.button', function () {
-				var $this = $(this);
-				var prefix = $this.parent().data('prefix');
-				$this.siblings('input:text').val(generateSN(prefix));
 			});
-
-			$('.mac').on('click', '.button', function () {
-				var $this = $(this);
-				$this.siblings('input:text').val(generateMac());
-			});
-
-			$('.password').text(getPassword());
-
-
 		});
 	</script>
 </body>
