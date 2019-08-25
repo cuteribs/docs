@@ -67,6 +67,10 @@
 			};
 
 			renderer.paragraph = text => {
+				if(text.includes('<div yne-bulb-block="image">')) {
+					return text;
+				}
+
 				return `<div yne-bulb-block="paragraph">${text}</div>`;
 			};
 
