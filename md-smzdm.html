@@ -1,0 +1,110 @@
+<html>
+	<head>
+		<title>Markdown Editor by Cuteribs</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<style type="text/css">
+			html,
+			body,
+			#editor {
+				margin: 0;
+				height: 100%;
+				color: #333;
+			}
+
+			textarea,
+			#editor div {
+				display: inline-block;
+				width: 49%;
+				height: 100%;
+				vertical-align: top;
+				box-sizing: border-box;
+				padding: 0 20px;
+			}
+
+			textarea {
+				border: none;
+				border-right: 1px solid #ccc;
+				resize: none;
+				outline: none;
+				background-color: #f6f6f6;
+				font-size: 14px;
+				padding: 20px;
+			}
+
+			code {
+				color: #f66;
+			}
+		</style>
+		<script src="https://unpkg.com/vue"></script>
+		<script src="https://unpkg.com/marked"></script>
+		<script src="https://unpkg.com/lodash"></script>
+	</head>
+
+	<body>
+		<div id="editor">
+			<textarea :value="input" @input="update"></textarea>
+			<div v-html="compiledMarkdown" @dblclick="select"></div>
+		</div>
+		<script>
+			const renderer = new marked.Renderer();
+
+			renderer.heading = (text, level) => {
+				let fontSize = 14;
+
+				switch(level) {
+					case 1:
+						fontSize = 32;
+						break;
+					case 2:
+						fontSize = 20;
+						break;
+					case 3:
+						fontSize = 16;
+						break;
+				}
+				
+				return `<div yne-bulb-block="heading"><span style="font-size:${fontSize}px;font-weight:bold;">${text}</span></div>`;
+			};
+
+			renderer.paragraph = (text) => {
+				return `<div yne-bulb-block="paragraph">${text}</div>`;
+			};
+
+			renderer.blockquote = (text) => {
+				return `<div style="color: rgb(153, 153, 153);" yne-bulb-block="quote"><div style="padding: 0px 10px 0px 17px; margin: 0px 10px 0px 17px; border-left: 3px solid rgb(232, 232, 232);">${text}</div></div>`;
+			};
+
+			renderer.image = (href, title, text) => {
+				return `<div yne-bulb-block="image"><img style="cursor: pointer;" alt="${text}" src="${href}" data-media-type="image"></div>`;
+			}
+
+			renderer.strong = (text) => {
+				return `<span style="font-weight:bold;">${text}</span>`;
+			}
+
+			new Vue({
+				el: '#editor',
+				data: {
+					input: '# hello'
+				},
+				computed: {
+					compiledMarkdown() {
+						return marked(this.input, { sanitize: true, renderer: renderer });
+					}
+				},
+				methods: {
+					update: _.debounce(function(e) {
+						this.input = e.target.value;
+					}, 300),
+					select: e => {
+						console.log(e.target);
+						const range = document.createRange();
+						range.selectNode(e.target);
+						window.getSelection().removeAllRanges();
+						window.getSelection().addRange(range);
+					}
+				}
+			});
+		</script>
+	</body>
+</html>
