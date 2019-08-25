@@ -12,7 +12,7 @@
 			}
 
 			textarea,
-			#editor div {
+			#editor > div {
 				display: inline-block;
 				width: 49%;
 				height: 100%;
@@ -51,7 +51,7 @@
 			renderer.heading = (text, level) => {
 				let fontSize = 14;
 
-				switch(level) {
+				switch (level + 1) {
 					case 1:
 						fontSize = 32;
 						break;
@@ -62,25 +62,25 @@
 						fontSize = 16;
 						break;
 				}
-				
+
 				return `<div yne-bulb-block="heading"><span style="font-size:${fontSize}px;font-weight:bold;">${text}</span></div>`;
 			};
 
-			renderer.paragraph = (text) => {
+			renderer.paragraph = text => {
 				return `<div yne-bulb-block="paragraph">${text}</div>`;
 			};
 
-			renderer.blockquote = (text) => {
+			renderer.blockquote = text => {
 				return `<div style="color: rgb(153, 153, 153);" yne-bulb-block="quote"><div style="padding: 0px 10px 0px 17px; margin: 0px 10px 0px 17px; border-left: 3px solid rgb(232, 232, 232);">${text}</div></div>`;
 			};
 
 			renderer.image = (href, title, text) => {
 				return `<div yne-bulb-block="image"><img style="cursor: pointer;" alt="${text}" src="${href}" data-media-type="image"></div>`;
-			}
+			};
 
-			renderer.strong = (text) => {
+			renderer.strong = text => {
 				return `<span style="font-weight:bold;">${text}</span>`;
-			}
+			};
 
 			new Vue({
 				el: '#editor',
@@ -89,7 +89,10 @@
 				},
 				computed: {
 					compiledMarkdown() {
-						return marked(this.input, { sanitize: true, renderer: renderer });
+						return marked(this.input, {
+							sanitize: true,
+							renderer: renderer
+						});
 					}
 				},
 				methods: {
