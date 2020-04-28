@@ -1,0 +1,451 @@
+<html>
+
+<head>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/series-label.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+	<style>
+		body {
+			background-color: #999;
+		}
+
+		.highcharts-figure {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+		}
+
+		#container1,
+		#container2 {
+			background-image: url(https://www.highcharts.com/samples/graphics/sand.png);
+			width: 650px;
+			height: 400px;
+			margin-left: 5px;
+		}
+
+		.highcharts-figure,
+		.highcharts-data-table table {
+			margin: 1em auto;
+		}
+
+		.highcharts-data-table table {
+			font-family: Verdana, sans-serif;
+			border-collapse: collapse;
+			border: 1px solid #ebebeb;
+			margin: 10px auto;
+			text-align: center;
+			width: 100%;
+			max-width: 500px;
+		}
+
+		.highcharts-data-table caption {
+			padding: 1em 0;
+			font-size: 1.2em;
+			color: #555;
+		}
+
+		.highcharts-data-table th {
+			font-weight: 600;
+			padding: 0.5em;
+		}
+
+		.highcharts-data-table td,
+		.highcharts-data-table th,
+		.highcharts-data-table caption {
+			padding: 0.5em;
+		}
+
+		.highcharts-data-table thead tr,
+		.highcharts-data-table tr:nth-child(even) {
+			background: #f8f8f8;
+		}
+
+		.highcharts-data-table tr:hover {
+			background: #f1f7ff;
+		}
+
+		.input {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+		}
+
+		.input .json,
+		.input .iperf {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		#json,
+		#iperf {
+			width: 320px;
+			height: 200px;
+		}
+	</style>
+</head>
+
+<body>
+	<figure class="highcharts-figure">
+		<div id="container1"></div>
+		<div id="container2"></div>
+	</figure>
+	<div class="input">
+		<select id="theme">
+			<option value="sand">白沙</option>
+			<option value="night">暮色</option>
+		</select>
+		<div class="json">
+			<textarea id="iperf">
+MacBook Pro: P4 位置
+Server listening on 5201
+-----------------------------------------------------------
+Accepted connection from 192.168.1.137, port 2950
+[  5] local 192.168.1.91 port 5201 connected to 192.168.1.137 port 2951
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-0.10   sec  4.88 MBytes   407 Mbits/sec
+[  5]   0.10-0.20   sec  8.12 MBytes   685 Mbits/sec
+[  5]   0.20-0.30   sec  10.9 MBytes   908 Mbits/sec
+[  5]   0.30-0.40   sec  9.38 MBytes   784 Mbits/sec
+[  5]   0.40-0.50   sec  8.62 MBytes   727 Mbits/sec
+[  5]   0.50-0.60   sec  9.75 MBytes   816 Mbits/sec
+[  5]   0.60-0.70   sec  9.12 MBytes   763 Mbits/sec
+[  5]   0.70-0.80   sec  8.38 MBytes   707 Mbits/sec
+[  5]   0.80-0.90   sec  11.1 MBytes   931 Mbits/sec
+[  5]   0.90-1.00   sec  8.75 MBytes   735 Mbits/sec
+[  5]   1.00-1.10   sec  7.88 MBytes   659 Mbits/sec
+[  5]   1.10-1.20   sec  10.9 MBytes   919 Mbits/sec
+[  5]   1.20-1.30   sec  9.62 MBytes   806 Mbits/sec
+[  5]   1.30-1.40   sec  10.1 MBytes   846 Mbits/sec
+[  5]   1.40-1.50   sec  9.88 MBytes   826 Mbits/sec
+[  5]   1.50-1.60   sec  9.25 MBytes   781 Mbits/sec
+[  5]   1.60-1.70   sec  8.88 MBytes   743 Mbits/sec
+[  5]   1.70-1.80   sec  9.75 MBytes   814 Mbits/sec
+[  5]   1.80-1.90   sec  8.38 MBytes   709 Mbits/sec
+[  5]   1.90-2.00   sec  10.8 MBytes   898 Mbits/sec
+[  5]   2.00-2.10   sec  9.88 MBytes   824 Mbits/sec
+[  5]   2.10-2.20   sec  9.38 MBytes   792 Mbits/sec
+[  5]   2.20-2.30   sec  10.2 MBytes   857 Mbits/sec
+[  5]   2.30-2.40   sec  8.88 MBytes   749 Mbits/sec
+[  5]   2.40-2.50   sec  9.75 MBytes   816 Mbits/sec
+[  5]   2.50-2.60   sec  10.5 MBytes   879 Mbits/sec
+[  5]   2.60-2.70   sec  8.00 MBytes   670 Mbits/sec
+[  5]   2.70-2.80   sec  10.5 MBytes   887 Mbits/sec
+[  5]   2.80-2.90   sec  9.88 MBytes   826 Mbits/sec
+[  5]   2.90-3.00   sec  10.0 MBytes   839 Mbits/sec
+[  5]   3.00-3.10   sec  8.88 MBytes   744 Mbits/sec
+[  5]   3.10-3.20   sec  8.75 MBytes   733 Mbits/sec
+[  5]   3.20-3.30   sec  11.1 MBytes   930 Mbits/sec
+[  5]   3.30-3.40   sec  7.50 MBytes   634 Mbits/sec
+[  5]   3.40-3.50   sec  12.5 MBytes  1.05 Gbits/sec
+[  5]   3.50-3.60   sec  9.50 MBytes   796 Mbits/sec
+[  5]   3.60-3.70   sec  8.38 MBytes   700 Mbits/sec
+[  5]   3.70-3.80   sec  8.88 MBytes   744 Mbits/sec
+[  5]   3.80-3.90   sec  11.4 MBytes   957 Mbits/sec
+[  5]   3.90-4.00   sec  9.75 MBytes   815 Mbits/sec
+[  5]   4.00-4.10   sec  7.38 MBytes   624 Mbits/sec
+[  5]   4.10-4.20   sec  10.0 MBytes   835 Mbits/sec
+[  5]   4.20-4.30   sec  9.62 MBytes   804 Mbits/sec
+[  5]   4.30-4.40   sec  8.00 MBytes   677 Mbits/sec
+[  5]   4.40-4.50   sec  9.88 MBytes   826 Mbits/sec
+[  5]   4.50-4.60   sec  9.12 MBytes   763 Mbits/sec
+[  5]   4.60-4.70   sec  7.50 MBytes   628 Mbits/sec
+[  5]   4.70-4.80   sec  8.62 MBytes   729 Mbits/sec
+[  5]   4.80-4.90   sec  8.75 MBytes   731 Mbits/sec
+[  5]   4.90-5.00   sec  10.1 MBytes   848 Mbits/sec
+[  5]   5.00-5.10   sec  9.38 MBytes   792 Mbits/sec
+[  5]   5.10-5.20   sec  9.12 MBytes   761 Mbits/sec
+[  5]   5.20-5.30   sec  11.0 MBytes   920 Mbits/sec
+[  5]   5.30-5.40   sec  10.2 MBytes   867 Mbits/sec
+[  5]   5.40-5.50   sec  9.12 MBytes   765 Mbits/sec
+[  5]   5.50-5.60   sec  9.50 MBytes   797 Mbits/sec
+[  5]   5.60-5.70   sec  9.12 MBytes   764 Mbits/sec
+[  5]   5.70-5.80   sec  10.4 MBytes   867 Mbits/sec
+[  5]   5.80-5.90   sec  8.62 MBytes   728 Mbits/sec
+[  5]   5.90-6.00   sec  10.8 MBytes   900 Mbits/sec
+[  5]   6.00-6.10   sec  10.2 MBytes   858 Mbits/sec
+[  5]   6.10-6.20   sec  9.25 MBytes   773 Mbits/sec
+[  5]   6.20-6.30   sec  10.4 MBytes   877 Mbits/sec
+[  5]   6.30-6.40   sec  9.62 MBytes   805 Mbits/sec
+[  5]   6.40-6.50   sec  6.62 MBytes   558 Mbits/sec
+[  5]   6.50-6.60   sec  11.6 MBytes   971 Mbits/sec
+[  5]   6.60-6.70   sec  8.75 MBytes   733 Mbits/sec
+[  5]   6.70-6.80   sec  11.6 MBytes   972 Mbits/sec
+[  5]   6.80-6.90   sec  9.75 MBytes   824 Mbits/sec
+[  5]   6.90-7.00   sec  8.38 MBytes   699 Mbits/sec
+[  5]   7.00-7.10   sec  11.0 MBytes   916 Mbits/sec
+[  5]   7.10-7.20   sec  9.38 MBytes   797 Mbits/sec
+[  5]   7.20-7.30   sec  10.2 MBytes   855 Mbits/sec
+[  5]   7.30-7.40   sec  9.25 MBytes   774 Mbits/sec
+[  5]   7.40-7.50   sec  9.50 MBytes   799 Mbits/sec
+[  5]   7.50-7.60   sec  8.50 MBytes   716 Mbits/sec
+[  5]   7.60-7.70   sec  10.8 MBytes   901 Mbits/sec
+[  5]   7.70-7.80   sec  7.12 MBytes   599 Mbits/sec
+[  5]   7.80-7.90   sec  11.1 MBytes   932 Mbits/sec
+[  5]   7.90-8.00   sec  8.75 MBytes   732 Mbits/sec
+[  5]   8.00-8.10   sec  7.62 MBytes   637 Mbits/sec
+[  5]   8.10-8.20   sec  13.0 MBytes  1.09 Gbits/sec
+[  5]   8.20-8.30   sec  9.25 MBytes   776 Mbits/sec
+[  5]   8.30-8.40   sec  6.88 MBytes   575 Mbits/sec
+[  5]   8.40-8.50   sec  6.62 MBytes   559 Mbits/sec
+[  5]   8.50-8.60   sec  7.75 MBytes   647 Mbits/sec
+[  5]   8.60-8.70   sec  10.2 MBytes   859 Mbits/sec
+[  5]   8.70-8.80   sec  9.12 MBytes   763 Mbits/sec
+[  5]   8.80-8.90   sec  10.2 MBytes   867 Mbits/sec
+[  5]   8.90-9.00   sec  10.1 MBytes   847 Mbits/sec
+[  5]   9.00-9.10   sec  9.50 MBytes   799 Mbits/sec
+[  5]   9.10-9.20   sec  9.75 MBytes   816 Mbits/sec
+[  5]   9.20-9.30   sec  9.50 MBytes   798 Mbits/sec
+[  5]   9.30-9.40   sec  9.75 MBytes   817 Mbits/sec
+[  5]   9.40-9.50   sec  10.5 MBytes   880 Mbits/sec
+[  5]   9.50-9.60   sec  8.38 MBytes   701 Mbits/sec
+[  5]   9.60-9.70   sec  10.6 MBytes   891 Mbits/sec
+[  5]   9.70-9.80   sec  8.62 MBytes   729 Mbits/sec
+[  5]   9.80-9.90   sec  10.2 MBytes   856 Mbits/sec
+[  5]   9.90-10.00  sec  9.25 MBytes   779 Mbits/sec
+[  5]  10.00-10.06  sec  2.12 MBytes   301 Mbits/sec
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-10.06  sec   945 MBytes   788 Mbits/sec                  sender
+- - - - - - - - - - - - - - - - - - - - - - - - -
+Server listening on 5201
+-----------------------------------------------------------
+Accepted connection from 192.168.1.137, port 2928
+[  5] local 192.168.1.91 port 5201 connected to 192.168.1.137 port 2929
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-0.10   sec  2.13 MBytes   178 Mbits/sec
+[  5]   0.10-0.20   sec  5.32 MBytes   446 Mbits/sec
+[  5]   0.20-0.30   sec  7.94 MBytes   666 Mbits/sec
+[  5]   0.30-0.40   sec  7.47 MBytes   626 Mbits/sec
+[  5]   0.40-0.50   sec  8.46 MBytes   710 Mbits/sec
+[  5]   0.50-0.60   sec  7.88 MBytes   660 Mbits/sec
+[  5]   0.60-0.70   sec  8.28 MBytes   696 Mbits/sec
+[  5]   0.70-0.80   sec  8.57 MBytes   720 Mbits/sec
+[  5]   0.80-0.90   sec  8.00 MBytes   671 Mbits/sec
+[  5]   0.90-1.00   sec  8.00 MBytes   672 Mbits/sec
+[  5]   1.00-1.10   sec  7.99 MBytes   670 Mbits/sec
+[  5]   1.10-1.20   sec  4.92 MBytes   412 Mbits/sec
+[  5]   1.20-1.30   sec  7.83 MBytes   657 Mbits/sec
+[  5]   1.30-1.40   sec  8.18 MBytes   686 Mbits/sec
+[  5]   1.40-1.50   sec  8.37 MBytes   701 Mbits/sec
+[  5]   1.50-1.60   sec  8.10 MBytes   680 Mbits/sec
+[  5]   1.60-1.70   sec  8.33 MBytes   698 Mbits/sec
+[  5]   1.70-1.80   sec  7.75 MBytes   652 Mbits/sec
+[  5]   1.80-1.90   sec  5.34 MBytes   446 Mbits/sec
+[  5]   1.90-2.00   sec  4.10 MBytes   345 Mbits/sec
+[  5]   2.00-2.10   sec  6.93 MBytes   582 Mbits/sec
+[  5]   2.10-2.20   sec  7.62 MBytes   639 Mbits/sec
+[  5]   2.20-2.30   sec  8.56 MBytes   718 Mbits/sec
+[  5]   2.30-2.40   sec  8.60 MBytes   721 Mbits/sec
+[  5]   2.40-2.50   sec  8.61 MBytes   722 Mbits/sec
+[  5]   2.50-2.60   sec  9.15 MBytes   765 Mbits/sec
+[  5]   2.60-2.70   sec  9.05 MBytes   762 Mbits/sec
+[  5]   2.70-2.80   sec  9.04 MBytes   758 Mbits/sec
+[  5]   2.80-2.90   sec  9.22 MBytes   774 Mbits/sec
+[  5]   2.90-3.00   sec  8.76 MBytes   734 Mbits/sec
+[  5]   3.00-3.10   sec  8.71 MBytes   728 Mbits/sec
+[  5]   3.10-3.20   sec  9.23 MBytes   777 Mbits/sec
+[  5]   3.20-3.30   sec  7.62 MBytes   640 Mbits/sec
+[  5]   3.30-3.40   sec  6.97 MBytes   585 Mbits/sec
+[  5]   3.40-3.50   sec  9.44 MBytes   791 Mbits/sec
+[  5]   3.50-3.60   sec  9.02 MBytes   757 Mbits/sec
+[  5]   3.60-3.70   sec  8.86 MBytes   743 Mbits/sec
+[  5]   3.70-3.80   sec  9.54 MBytes   801 Mbits/sec
+[  5]   3.80-3.90   sec  8.87 MBytes   744 Mbits/sec
+[  5]   3.90-4.00   sec  8.72 MBytes   732 Mbits/sec
+[  5]   4.00-4.10   sec  9.83 MBytes   825 Mbits/sec
+[  5]   4.10-4.20   sec  9.42 MBytes   791 Mbits/sec
+[  5]   4.20-4.30   sec  8.94 MBytes   749 Mbits/sec
+[  5]   4.30-4.40   sec  9.48 MBytes   795 Mbits/sec
+[  5]   4.40-4.50   sec  7.79 MBytes   654 Mbits/sec
+[  5]   4.50-4.60   sec  9.18 MBytes   770 Mbits/sec
+[  5]   4.60-4.70   sec  8.44 MBytes   707 Mbits/sec
+[  5]   4.70-4.80   sec  8.62 MBytes   723 Mbits/sec
+[  5]   4.80-4.90   sec  8.00 MBytes   671 Mbits/sec
+[  5]   4.90-5.00   sec  8.32 MBytes   698 Mbits/sec
+[  5]   5.00-5.10   sec  8.63 MBytes   724 Mbits/sec
+[  5]   5.10-5.20   sec  5.89 MBytes   494 Mbits/sec
+[  5]   5.20-5.30   sec  5.65 MBytes   474 Mbits/sec
+[  5]   5.30-5.40   sec  7.88 MBytes   660 Mbits/sec
+[  5]   5.40-5.50   sec  8.16 MBytes   686 Mbits/sec
+[  5]   5.50-5.60   sec  8.85 MBytes   740 Mbits/sec
+[  5]   5.60-5.70   sec  8.78 MBytes   738 Mbits/sec
+[  5]   5.70-5.80   sec  8.52 MBytes   714 Mbits/sec
+[  5]   5.80-5.90   sec  8.58 MBytes   718 Mbits/sec
+[  5]   5.90-6.00   sec  8.41 MBytes   705 Mbits/sec
+[  5]   6.00-6.10   sec  8.57 MBytes   719 Mbits/sec
+[  5]   6.10-6.20   sec  7.01 MBytes   589 Mbits/sec
+[  5]   6.20-6.30   sec  5.60 MBytes   468 Mbits/sec
+[  5]   6.30-6.40   sec  7.73 MBytes   654 Mbits/sec
+[  5]   6.40-6.50   sec  7.15 MBytes   600 Mbits/sec
+[  5]   6.50-6.60   sec  7.88 MBytes   662 Mbits/sec
+[  5]   6.60-6.70   sec  7.07 MBytes   592 Mbits/sec
+[  5]   6.70-6.80   sec  7.13 MBytes   599 Mbits/sec
+[  5]   6.80-6.90   sec  8.03 MBytes   673 Mbits/sec
+[  5]   6.90-7.00   sec  8.11 MBytes   681 Mbits/sec
+[  5]   7.00-7.10   sec  7.75 MBytes   651 Mbits/sec
+[  5]   7.10-7.20   sec  8.09 MBytes   677 Mbits/sec
+[  5]   7.20-7.30   sec  8.46 MBytes   711 Mbits/sec
+[  5]   7.30-7.40   sec  8.01 MBytes   672 Mbits/sec
+[  5]   7.40-7.50   sec  8.09 MBytes   678 Mbits/sec
+[  5]   7.50-7.60   sec  9.11 MBytes   764 Mbits/sec
+[  5]   7.60-7.70   sec  8.91 MBytes   747 Mbits/sec
+[  5]   7.70-7.80   sec  8.97 MBytes   753 Mbits/sec
+[  5]   7.80-7.90   sec  8.97 MBytes   753 Mbits/sec
+[  5]   7.90-8.00   sec  7.50 MBytes   629 Mbits/sec
+[  5]   8.00-8.10   sec  9.00 MBytes   755 Mbits/sec
+[  5]   8.10-8.20   sec  8.74 MBytes   731 Mbits/sec
+[  5]   8.20-8.30   sec  8.78 MBytes   738 Mbits/sec
+[  5]   8.30-8.40   sec  8.87 MBytes   744 Mbits/sec
+[  5]   8.40-8.50   sec  8.78 MBytes   736 Mbits/sec
+[  5]   8.50-8.60   sec  8.91 MBytes   747 Mbits/sec
+[  5]   8.60-8.70   sec  8.64 MBytes   726 Mbits/sec
+[  5]   8.70-8.80   sec  8.24 MBytes   690 Mbits/sec
+[  5]   8.80-8.90   sec  8.17 MBytes   683 Mbits/sec
+[  5]   8.90-9.00   sec  7.63 MBytes   643 Mbits/sec
+[  5]   9.00-9.10   sec  7.96 MBytes   668 Mbits/sec
+[  5]   9.10-9.20   sec  8.03 MBytes   670 Mbits/sec
+[  5]   9.20-9.30   sec  8.03 MBytes   678 Mbits/sec
+[  5]   9.30-9.40   sec  4.34 MBytes   362 Mbits/sec
+[  5]   9.40-9.50   sec  7.37 MBytes   618 Mbits/sec
+[  5]   9.50-9.60   sec  4.10 MBytes   343 Mbits/sec
+[  5]   9.60-9.70   sec  4.28 MBytes   362 Mbits/sec
+[  5]   9.70-9.80   sec  7.94 MBytes   666 Mbits/sec
+[  5]   9.80-9.90   sec  7.67 MBytes   644 Mbits/sec
+[  5]   9.90-10.00  sec  5.29 MBytes   439 Mbits/sec
+[  5]  10.00-10.04  sec  2.29 MBytes   438 Mbits/sec
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-10.04  sec   794 MBytes   663 Mbits/sec                  receiver
+			</textarea>
+			<button onclick="applyIperf()">应用 Iperf 数据</button>
+		</div>
+		<div class="json">
+			<textarea id="json">
+{
+	"title":"MacBook Pro: P4 位置",
+	"sender":[ 25.5,29.6,24.2,37.4,33.9,21.4,32.7,24.1,29.4,37.5,30.5,18.4,39.5,46.0,46.2,43.1,37.6,44.0,40.5,29.8,40.0,38.0,26.0,38.3,24.2,33.0,38.6,44.5,39.5,45.3,45.0,45.8,41.8,41.3,41.9,37.3,41.8,42.8,41.9,41.2,40.9,44.2,37.2,42.1,30.7,34.4,32.2,19.6,11.2,8.27,2.24,0.0,29.8,29.5,28.2,14.4,18.3,30.1,33.0,30.1,18.8,7.61,6.83,21.0,19.1,21.6,21.2,22.0,20.1,21.3,21.2,20.9,21.1,20.0,16.8,20.2,22.1,21.3,20.4,20.8,22.0,21.5,20.7,19.6,21.0,21.8,20.8,20.7,20.8,20.5,21.9,21.9,21.0,22.5,27.3,21.9,21.6,33.4,28.4,33.3,25.9 ],
+	"receiver":[ 21.0,0.0,21.0,10.5,10.4,10.5,21.0,20.9,21.0,31.5,20.9,21.1,41.9,62.8,31.4,42.0,63.1,73.6,62.6,115,63.2,105,93.9,83.9,168,105,63.2,147,126,126,63.0,136,73.7,62.5,147,94.6,21.1,73.3,83.9,62.5,10.5,0.0,42.0,0.0,0.0,0.0,83.6,0.0,42.2,0.0,0.0,73.6,31.4,73.5,41.9,94.0,84.3,41.7,116,157,83.9,157,83.6,84.2,137,156,84.2,168,230,116,167,116,105,199,115,157,105,126,116,198,178,105,126,127,146,232,146,126,73.3,179,158,167,157,147,84.1,221,135,147,84.5,210,120 ]
+}
+			</textarea>
+			<button onclick="applyJson()">应用 JSON 数据</button>
+		</div>
+	</div>
+	<script>
+		Array.prototype.randomSort = function () {
+			const sortedArray = this.map(i => ({ v: i, k: Math.random() })).sort((a, b) => a.k - b.k).map(i => i.v);
+			return sortedArray;
+		};
+
+		const themeSand = {
+			chart: { width: 650, height: 400, backgroundColor: null, type: 'spline' },
+			credits: { text: 'made by 可爱的排骨', style: { fontSize: '12px' }, position: { verticalAlign: 'top', x: -50, y: 20 } },
+			title: { align: 'left', x: 30, style: { color: '#303030' } },
+			yAxis: [{ title: { text: '(Mbps)' } }, { title: { text: '' }, linkedTo: 0, opposite: true }],
+			plotOptions: { spline: { lineWidth: 3, marker: { enabled: false } }, series: { animation: { duration: 5000 }, shadow: true, enableMouseTracking: false } },
+			colors: ['#f45b5b', '#8085e9', '#8d4654', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+			series: [{ name: '下行' }, { name: '上行' }],
+			navigation: { menuItemStyle: { fontSize: '10px' } }
+		};
+		const themeDark = {
+			chart: { width: 650, height: 400, backgroundColor: '#3e3e40', type: 'spline' },
+			credits: { text: 'made by 可爱的排骨', style: { fontSize: '12px' }, position: { verticalAlign: 'top', x: -50, y: 20 } },
+			title: { align: 'left', x: 30, style: { color: '#E0E0E3' } },
+			legend: { itemStyle: { color: '#999' } },
+			xAxis: {
+				labels: { style: { color: '#999' } },
+				lineColor: '#999',
+				tickColor: '#999'
+			},
+			yAxis: [{ title: { text: '(Mbps)' } }, { labels: { style: { color: '#999' } }, gridLineColor: '#999', title: { text: '' }, linkedTo: 0, opposite: true }],
+			plotOptions: { spline: { lineWidth: 3, marker: { enabled: false } }, series: { animation: { duration: 5000 }, shadow: { color: '#fff' }, enableMouseTracking: false } },
+			colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+			//	colors: [
+			// 	{ linearGradient: [0, 0, 516, 0], stops: [[0, '#ccff90'], [1, '#0097a7']] },
+			// 	{ linearGradient: [0, 0, 516, 0], stops: [[0, '#ffa000'], [1, '#d500f9']] }
+			// ],
+			series: [{ name: '下行' }, { name: '上行' }],
+			navigation: { buttonOptions: { symbolStroke: '#DDDDDD', theme: { fill: '#505053' } } }
+		};
+
+		let chart1, chart2;
+
+		const createChart = (data) => {
+			if (chart1) {
+				clearTimeout(chart1.timeout);
+				chart1.destroy();
+				clearTimeout(chart2.timeout);
+				chart2.destroy();
+			}
+
+			const theme = document.getElementById('theme').value === 'sand' ? themeSand : themeDark;
+			const colors = theme.colors.randomSort();
+
+			Highcharts.setOptions(theme);
+			chart1 = Highcharts.chart('container1', {
+				title: { text: `AX3 Pro 速度测试 (${data.title})` },
+				colors,
+				series: [{ name: '下行', data: data.sender }, { name: '上行', data: data.receiver }]
+			});
+			chart1.timeout = setTimeout(() => { updateSeriesName(chart1.series[0]); updateSeriesName(chart1.series[1]); chart1.redraw(false); }, 5000);
+
+			const [sender, receiver] = [reduceData(data.sender, 10), reduceData(data.receiver, 10)];
+			chart2 = Highcharts.chart('container2', {
+				title: { text: `AX3 Pro 速度测试 (${data.title})` },
+				colors,
+				series: [{ name: '下行', data: sender }, { name: '上行', data: receiver }]
+			}
+			);
+			chart2.timeout = setTimeout(() => { updateSeriesName(chart2.series[0]); updateSeriesName(chart2.series[1]); chart2.redraw(false); }, 5000);
+		};
+
+		const updateSeriesName = (series) => {
+			let avg = series.yData.reduce((a, c) => a + c, 0) / series.yData.length;
+			series.update({ name: `${series.name}: ${avg.toFixed(1)}Mbps` }, false);
+		};
+
+		const reduceData = (arr, n) => Array(Math.ceil(arr.length / n)).fill().map((v, i) => arr.slice(i * n, (i + 1) * n).reduce((a, c) => a + c, 0) / n);
+
+		const applyJson = () => {
+			const data = JSON.parse(document.getElementById('json').value);
+			createChart(data);
+		};
+
+		const applyIperf = () => {
+			const text = document.getElementById('iperf').value;
+			const lines = text.split('\n');
+			let sender,
+				receiver,
+				values = [];
+
+			for (let i = 1; i < lines.length; i++) {
+				const line = lines[i].trim();
+
+				if (line === '- - - - - - - - - - - - - - - - - - - - - - - - -') {
+					const endLine = lines[i + 2].trim();
+					const direction = endLine.split(' ').pop();
+
+					switch (direction) {
+						case 'sender':
+							sender = [...values];
+							break;
+						case 'receiver':
+							receiver = [...values];
+							break;
+						default:
+							break;
+					}
+
+					values.length = 0;
+				} else if (line.startsWith('[  5]   ')) {
+					const columns = line.split(' ').filter((c) => c.trim().length > 0);
+					values.push(parseFloat(columns[6]));
+				}
+			}
+
+			createChart({ title: lines[0], sender, receiver });
+		};
+	</script>
+</body>
+
+</html>
