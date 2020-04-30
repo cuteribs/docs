@@ -1,0 +1,255 @@
+<html>
+
+<head>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/series-label.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+	<style>
+		body {
+			background-color: #999;
+		}
+
+		.highcharts-figure {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+		}
+
+		#container1,
+		#container2 {
+			background-image: url(https://www.highcharts.com/samples/graphics/sand.png);
+			/* background-image: linear-gradient(#fff8, #fffa), url(https://w.wallhaven.cc/full/2k/wallhaven-2kve86.png); */
+			/* background-size: cover; */
+			width: 650px;
+			height: 400px;
+			margin-left: 5px;
+		}
+
+		.highcharts-figure,
+		.highcharts-data-table table {
+			margin: 1em auto;
+		}
+
+		.highcharts-data-table table {
+			font-family: Verdana, sans-serif;
+			border-collapse: collapse;
+			border: 1px solid #ebebeb;
+			margin: 10px auto;
+			text-align: center;
+			width: 100%;
+			max-width: 500px;
+		}
+
+		.highcharts-data-table caption {
+			padding: 1em 0;
+			font-size: 1.2em;
+			color: #555;
+		}
+
+		.highcharts-data-table th {
+			font-weight: 600;
+			padding: 0.5em;
+		}
+
+		.highcharts-data-table td,
+		.highcharts-data-table th,
+		.highcharts-data-table caption {
+			padding: 0.5em;
+		}
+
+		.highcharts-data-table thead tr,
+		.highcharts-data-table tr:nth-child(even) {
+			background: #f8f8f8;
+		}
+
+		.highcharts-data-table tr:hover {
+			background: #f1f7ff;
+		}
+
+		.input {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			align-items: start;
+		}
+
+		.input .json {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+		}
+
+		#data1,
+		#data2 {
+			width: 320px;
+			height: 200px;
+		}
+	</style>
+</head>
+
+<body>
+	<!--
+有线,940.8,946.1
+AX160,831.3,840.6
+AC160,801.1,863.7
+AX80,769.7,664.2
+AC80,704.2,700.6
+MBP,769.7,664.2
+SE2,712.4,605.8
+6s,550.8,508.4
+-->
+	<figure class="highcharts-figure">
+		<div id="container1"></div>
+		<div id="container2"></div>
+	</figure>
+	<div class="input">
+		<select id="theme">
+			<option value="sand">白沙</option>
+			<option value="night">暮色</option>
+		</select>
+		<div class="json">
+			<textarea id="data1">
+有线,940.8,946.1
+AX160,831.3,840.6
+AC160,801.1,863.7
+AX80,769.7,664.2
+AC80,704.2,700.6
+MBP,623.6,593.8
+SE2,712.4,605.8
+6s,550.8,508.4
+			</textarea>
+			<textarea id="data2">
+AX200 P1,831.3,840.6
+MBP P1,623.6,593.8
+AX200 P2,729.1,633.2
+MBP P2,404.1,259.4
+AX200 P3,622.8,535.3
+MBP P3,437.0,182.0
+AX200 P4,279.7,111.0
+MBP P4,90.8,28.2
+				</textarea>
+			<button onclick="applyData()">应用数据</button>
+		</div>
+	</div>
+	<script>
+		const themeSand = {
+			chart: { width: 650, height: 400, backgroundColor: null, type: 'bar' },
+			credits: {
+				text: 'made by 可爱的排骨',
+				style: { fontSize: '12px' },
+				position: { verticalAlign: 'top', x: -50, y: 20 }
+			},
+			title: { align: 'left', x: 30, style: { color: '#303030' } },
+			yAxis: {
+				title: { text: '' },
+				min: -1000,
+				max: 1000,
+				labels: { formatter: function () { return Math.abs(this.value); } }
+			},
+			plotOptions: {
+				bar: { dataLabels: { enabled: true, inside: true, formatter: function () { return Math.abs(this.y); } } },
+				series: { stacking: 'normal', shadow: true, enableMouseTracking: false }
+			},
+			colors: ['#f45b5b', '#8085e9'],
+			series: [{ name: '下行' }, { name: '上行' }]
+		};
+		const themeDark = {
+			// chart: { width: 650, height: 400, backgroundColor: '#3e3e40', type: 'spline' },
+			chart: { width: 650, height: 400, backgroundColor: null, type: 'bar' },
+			credits: {
+				text: 'made by 可爱的排骨',
+				style: { fontSize: '12px' },
+				position: { verticalAlign: 'top', x: -50, y: 20 }
+			},
+			title: { align: 'left', x: 30, style: { color: '#E0E0E3' } },
+			legend: { itemStyle: { color: '#999' } },
+			yAxis: {
+				title: { text: '' },
+				min: -1000,
+				max: 1000,
+				labels: { style: { color: '#999' }, formatter: function () { return Math.abs(this.value); } },
+				gridLineColor: '#999'
+			},
+			plotOptions: {
+				bar: { dataLabels: { enabled: true, inside: true, formatter: function () { return Math.abs(this.y); } } },
+				series: { stacking: 'normal', shadow: true, enableMouseTracking: false }
+			},
+			colors: ['#2b908f', '#90ee7e'],
+			//	colors: [
+			// 	{ linearGradient: [0, 0, 516, 0], stops: [[0, '#ccff90'], [1, '#0097a7']] },
+			// 	{ linearGradient: [0, 0, 516, 0], stops: [[0, '#ffa000'], [1, '#d500f9']] }
+			// ],
+			series: [{ name: '下行' }, { name: '上行' }]
+		};
+
+		let chart1, chart2;
+
+		const createChart = (data1, data2) => {
+			console.log(data1, data2);
+
+			if (chart1) {
+				clearTimeout(chart1.timeout);
+				chart1.destroy();
+				clearTimeout(chart2.timeout);
+				chart2.destroy();
+			}
+
+			const theme = document.getElementById('theme').value === 'sand' ? themeSand : themeDark;
+			const colors = theme.colors; //.randomSort();
+
+			Highcharts.setOptions(theme);
+			chart1 = Highcharts.chart('container1', {
+				colors,
+				title: { text: `AX3 Pro 速度测试 摘要 1` },
+				xAxis: [
+					{ categories: data1.map((r) => `${r.title}`), labels: { step: 1 }, reverse: true },
+					{ categories: data1.map((r) => `${r.title}`), reverse: false, opposite: true, linkedTo: 0 }
+				],
+				series: [
+					{ name: '下行', data: data1.map((r) => r.down), dataLabels: { align: 'left' } },
+					{ name: '上行', data: data1.map((r) => r.up), dataLabels: { align: 'right' } }
+				]
+			});
+
+			chart2 = Highcharts.chart('container2', {
+				colors,
+				title: { text: `AX3 Pro 速度测试 摘要 2` },
+				xAxis: [
+					{ categories: data2.map((r) => `${r.title}`), labels: { step: 1 }, reverse: true },
+					{ categories: data2.map((r) => `${r.title}`), reverse: false, opposite: true, linkedTo: 0 }
+				],
+				series: [
+					{ name: '下行', data: data2.map((r) => r.down), dataLabels: { align: 'left' } },
+					{ name: '上行', data: data2.map((r) => r.up), dataLabels: { align: 'right' } }
+				]
+			});
+		};
+
+		const applyData = () => {
+			let text = document.getElementById('data1').value;
+			let lines = text.split('\n').filter((l) => l.trim().length > 0);
+			const values = [];
+
+			for (let i = 0; i < lines.length; i++) {
+				const columns = lines[i].trim().split(',');
+				values.push({ title: columns[0], down: -parseFloat(columns[1]), up: parseFloat(columns[2]) });
+			}
+
+			const data1 = [...values];
+			values.length = 0;
+
+			text = document.getElementById('data2').value;
+			lines = text.split('\n').filter((l) => l.trim().length > 0);
+
+			for (let i = 0; i < lines.length; i++) {
+				const columns = lines[i].trim().split(',');
+				values.push({ title: columns[0], down: -parseFloat(columns[1]), up: parseFloat(columns[2]) });
+			}
+
+			const data2 = [...values];
+			createChart(data1, data2);
+		};
+	</script>
+</body>
+
+</html>
