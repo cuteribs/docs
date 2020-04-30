@@ -430,7 +430,9 @@ Accepted connection from 192.168.1.251, port 54909
 				const line = lines[i].trim();
 				console.log(line.slice(0, 8) === '[  5]   ');
 
-				if (line === '- - - - - - - - - - - - - - - - - - - - - - - - -') {
+				if(line.startsWith('[  5] local')) {
+					continue;
+				} else if (line === '- - - - - - - - - - - - - - - - - - - - - - - - -') {
 					const endLine = lines[i + 2].trim();
 					const direction = endLine.split(' ').pop();
 
@@ -446,7 +448,7 @@ Accepted connection from 192.168.1.251, port 54909
 					}
 
 					values.length = 0;
-				} else if (line.startsWith('[  5]   ')) {
+				} else if (line.startsWith('[  5]')) {
 					const columns = line.split(' ').filter((c) => c.trim().length > 0);
 					values.push(parseFloat(columns[6]));
 				}
