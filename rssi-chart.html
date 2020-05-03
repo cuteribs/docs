@@ -1,0 +1,181 @@
+<html>
+
+<head>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/series-label.js"></script>
+	<!-- <script src="https://code.highcharts.com/modules/exporting.js"></script> -->
+	<style>
+		body {
+			background-color: #999;
+		}
+
+		.highcharts-figure {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+		}
+
+		#container1,
+		#container2 {
+			background-image: url(https://www.highcharts.com/samples/graphics/sand.png);
+			/* background-image: linear-gradient(#fff8, #fffa), url(https://w.wallhaven.cc/full/2k/wallhaven-2kve86.png); */
+			/* background-size: cover; */
+			width: 650px;
+			height: 400px;
+			margin-left: 5px;
+		}
+
+		.highcharts-figure,
+		.highcharts-data-table table {
+			margin: 1em auto;
+		}
+
+		.highcharts-data-table table {
+			font-family: Verdana, sans-serif;
+			border-collapse: collapse;
+			border: 1px solid #ebebeb;
+			margin: 10px auto;
+			text-align: center;
+			width: 100%;
+			max-width: 500px;
+		}
+
+		.highcharts-data-table caption {
+			padding: 1em 0;
+			font-size: 1.2em;
+			color: #555;
+		}
+
+		.highcharts-data-table th {
+			font-weight: 600;
+			padding: 0.5em;
+		}
+
+		.highcharts-data-table td,
+		.highcharts-data-table th,
+		.highcharts-data-table caption {
+			padding: 0.5em;
+		}
+
+		.highcharts-data-table thead tr,
+		.highcharts-data-table tr:nth-child(even) {
+			background: #f8f8f8;
+		}
+
+		.highcharts-data-table tr:hover {
+			background: #f1f7ff;
+		}
+
+		.input {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			align-items: start;
+		}
+
+		.input .json {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		#data {
+			width: 320px;
+			height: 200px;
+		}
+	</style>
+</head>
+
+<body>
+	<figure class="highcharts-figure">
+		<div id="container1"></div>
+	</figure>
+	<div class="input">
+		<select id="theme">
+			<option value="sand">白沙</option>
+			<option value="night">暮色</option>
+		</select>
+		<div class="json">
+			<textarea id="data">
+位置, AX3 Pro, K2P A1
+P1, -34, -34
+P2, -50, -56
+P3, -63, -66
+P4, -73, -72
+			</textarea>
+			<button onclick="applyData()">应用数据</button>
+		</div>
+	</div>
+	<script>
+		const themeSand = {
+			chart: { width: 650, height: 400, backgroundColor: null, type: 'column' },
+			credits: { text: 'made by 可爱的排骨', style: { fontSize: '12px' }, position: { verticalAlign: 'top', x: -50, y: 20 } },
+			title: { align: 'left', x: 30, style: { color: '#303030' } },
+			yAxis: { title: { text: '(dbM)' }, reversed: true },
+			plotOptions: { column: { dataLabels: { enabled: true, onArea: true } }, series: { dataLabels: { inside: true, verticalAlign: 'top'}, shadow: true, enableMouseTracking: false } },
+			colors: ['#f45b5b', '#8085e9', '#8d4654', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee', '#55BF3B', '#DF5353', '#7798BF']
+		};
+		const themeDark = {
+			// chart: { width: 650, height: 400, backgroundColor: '#3e3e40', type: 'spline' },
+			chart: { width: 650, height: 400, backgroundColor: null, type: 'spline' },
+			credits: { text: 'made by 可爱的排骨', style: { fontSize: '12px' }, position: { verticalAlign: 'top', x: -50, y: 20 } },
+			title: { align: 'left', x: 30, style: { color: '#E0E0E3' } },
+			legend: { itemStyle: { color: '#999' } },
+			xAxis: { visible: false, labels: { style: { color: '#999' } } },
+			yAxis: [{ title: { text: '(Mbps)' }, min: 0 }, { labels: { style: { color: '#999' } }, gridLineColor: '#999', title: { text: '' }, linkedTo: 0, opposite: true }],
+			plotOptions: { spline: { lineWidth: 3, marker: { enabled: false } }, series: { animation: { duration: 5000 }, shadow: { color: '#fff' }, enableMouseTracking: false } },
+			colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee', '#55BF3B', '#DF5353', '#7798BF'],
+			//	colors: [
+			// 	{ linearGradient: [0, 0, 516, 0], stops: [[0, '#ccff90'], [1, '#0097a7']] },
+			// 	{ linearGradient: [0, 0, 516, 0], stops: [[0, '#ffa000'], [1, '#d500f9']] }
+			// ],
+			series: [{ name: '下行' }, { name: '上行' }],
+			navigation: { buttonOptions: { symbolStroke: '#DDDDDD', theme: { fill: '#505053' } } }
+		};
+
+		let chart1;
+
+		const createChart = (data, categories) => {
+			console.log(data);
+			if (chart1) {
+				clearTimeout(chart1.timeout);
+				chart1.destroy();
+			}
+
+			const theme = document.getElementById('theme').value === 'sand' ? themeSand : themeDark;
+			const colors = theme.colors;//.randomSort();
+
+			Highcharts.setOptions(theme);
+			chart1 = Highcharts.chart('container1', {
+				title: { text: `AX3 Pro vs K2P A1 信号对比 (越)` },
+				colors,
+				xAxis: { categories },
+				series: data.map(i => ({ name: i.name, data: i.signals }))
+			});
+			// chart1.timeout = setTimeout(() => { updateSeriesName(chart1.series[0]); updateSeriesName(chart1.series[1]); chart1.redraw(false); }, 5000);
+		};
+
+		const applyData = () => {
+			const text = document.getElementById('data').value;
+			const lines = text.split('\n').filter(i => i.trim().length > 0).map(i => i.trim());
+			const data = [];
+			const columnNames = lines[0].split(',').slice(1);
+
+			for (let i = 0; i < columnNames.length; i++) {
+				const device = { name: columnNames[i].trim(), signals: [] };
+
+				for (let j = 1; j < lines.length; j++) {
+					const signal = parseInt(lines[j].split(',')[i + 1]);
+					device.signals.push(signal);
+				}
+
+				data.push(device);
+			}
+
+			const categories = lines.slice(1).map(l => l.split(',')[0].trim());
+			createChart(data, categories);
+		};
+	</script>
+</body>
+
+</html>

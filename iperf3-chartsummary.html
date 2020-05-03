@@ -109,24 +109,24 @@ SE2,712.4,605.8
 		</select>
 		<div class="json">
 			<textarea id="data1">
-有线,940.8,946.1
-AX160,831.3,840.6
-AC160,801.1,863.7
-AX80,769.7,664.2
+有线,940.3,946.1
+AX160,831.2,847.6
+AC160,800.4,870.6
+AX80,773.7,666.7
 AC80,704.2,700.6
-MBP,623.6,593.8
-SE2,712.4,605.8
-6s,550.8,508.4
+MBP,623.1,596.7
+SE2,712.4,611.8
+6s,551.2,510,8
 			</textarea>
 			<textarea id="data2">
-AX200 P1,831.3,840.6
-MBP P1,623.6,593.8
-AX200 P2,729.1,633.2
-MBP P2,404.1,259.4
-AX200 P3,622.8,535.3
-MBP P3,437.0,182.0
-AX200 P4,279.7,111.0
-MBP P4,90.8,28.2
+AX200 P1,831.2,847.6
+MBP P1,623.1,596.7
+AX200 P2,730.0,638.3
+MBP P2,405.5,260.7
+AX200 P3,623.6,538.6
+MBP P3,439.5,182.6
+AX200 P4,281.4,111,5
+MBP P4,91.5,28.2
 				</textarea>
 			<button onclick="applyData()">应用数据</button>
 		</div>
@@ -147,15 +147,14 @@ MBP P4,90.8,28.2
 				labels: { formatter: function () { return Math.abs(this.value); } }
 			},
 			plotOptions: {
-				bar: { dataLabels: { enabled: true, inside: true, formatter: function () { return Math.abs(this.y); } } },
+				bar: { dataLabels: { enabled: true, formatter: function () { return Math.abs(this.y); } } },
 				series: { stacking: 'normal', shadow: true, enableMouseTracking: false }
 			},
 			colors: ['#f45b5b', '#8085e9'],
 			series: [{ name: '下行' }, { name: '上行' }]
 		};
 		const themeDark = {
-			// chart: { width: 650, height: 400, backgroundColor: '#3e3e40', type: 'spline' },
-			chart: { width: 650, height: 400, backgroundColor: null, type: 'bar' },
+			chart: { width: 650, height: 400, backgroundColor: '#3e3e40', type: 'bar' },
 			credits: {
 				text: 'made by 可爱的排骨',
 				style: { fontSize: '12px' },
@@ -163,6 +162,7 @@ MBP P4,90.8,28.2
 			},
 			title: { align: 'left', x: 30, style: { color: '#E0E0E3' } },
 			legend: { itemStyle: { color: '#999' } },
+			xAxis: { labels: { style: { color: '#999' } } },
 			yAxis: {
 				title: { text: '' },
 				min: -1000,
@@ -171,7 +171,7 @@ MBP P4,90.8,28.2
 				gridLineColor: '#999'
 			},
 			plotOptions: {
-				bar: { dataLabels: { enabled: true, inside: true, formatter: function () { return Math.abs(this.y); } } },
+				bar: { dataLabels: { enabled: true, formatter: function () { return Math.abs(this.y); } } },
 				series: { stacking: 'normal', shadow: true, enableMouseTracking: false }
 			},
 			colors: ['#2b908f', '#90ee7e'],
@@ -203,7 +203,7 @@ MBP P4,90.8,28.2
 				title: { text: `AX3 Pro 速度测试 摘要 1` },
 				xAxis: [
 					{ categories: data1.map((r) => `${r.title}`), labels: { step: 1 }, reverse: true },
-					{ categories: data1.map((r) => `${r.title}`), reverse: false, opposite: true, linkedTo: 0 }
+					{ categories: data1.map((r) => `${r.title}`), reverse: false }
 				],
 				series: [
 					{ name: '下行', data: data1.map((r) => r.down), dataLabels: { align: 'left' } },
@@ -216,7 +216,7 @@ MBP P4,90.8,28.2
 				title: { text: `AX3 Pro 速度测试 摘要 2` },
 				xAxis: [
 					{ categories: data2.map((r) => `${r.title}`), labels: { step: 1 }, reverse: true },
-					{ categories: data2.map((r) => `${r.title}`), reverse: false, opposite: true, linkedTo: 0 }
+					{ categories: data2.map((r) => `${r.title}`), reverse: false }
 				],
 				series: [
 					{ name: '下行', data: data2.map((r) => r.down), dataLabels: { align: 'left' } },
