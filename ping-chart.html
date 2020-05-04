@@ -1,0 +1,344 @@
+<html>
+
+<head>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/series-label.js"></script>
+	<!-- <script src="https://code.highcharts.com/modules/exporting.js"></script> -->
+	<style>
+		body {
+			background-color: #999;
+		}
+
+		.highcharts-figure {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+		}
+
+		#container1 {
+			background-image: url(https://www.highcharts.com/samples/graphics/sand.png);
+			/* background-image: linear-gradient(#fff8, #fffa), url(https://w.wallhaven.cc/full/2k/wallhaven-2kve86.png); */
+			/* background-size: cover; */
+			width: 650px;
+			height: 400px;
+			margin-left: 5px;
+		}
+
+		.highcharts-figure,
+		.highcharts-data-table table {
+			margin: 1em auto;
+		}
+
+		.highcharts-data-table table {
+			font-family: Verdana, sans-serif;
+			border-collapse: collapse;
+			border: 1px solid #ebebeb;
+			margin: 10px auto;
+			text-align: center;
+			width: 100%;
+			max-width: 500px;
+		}
+
+		.highcharts-data-table caption {
+			padding: 1em 0;
+			font-size: 1.2em;
+			color: #555;
+		}
+
+		.highcharts-data-table th {
+			font-weight: 600;
+			padding: 0.5em;
+		}
+
+		.highcharts-data-table td,
+		.highcharts-data-table th,
+		.highcharts-data-table caption {
+			padding: 0.5em;
+		}
+
+		.highcharts-data-table thead tr,
+		.highcharts-data-table tr:nth-child(even) {
+			background: #f8f8f8;
+		}
+
+		.highcharts-data-table tr:hover {
+			background: #f1f7ff;
+		}
+
+		.input {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			align-items: start;
+		}
+
+		.input .json,
+		.input .iperf {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		#json,
+		#iperf {
+			width: 320px;
+			height: 200px;
+		}
+	</style>
+</head>
+
+<body>
+	<figure class="highcharts-figure">
+		<div id="container1"></div>
+	</figure>
+	<div class="input">
+		<select id="theme">
+			<option value="sand">白沙</option>
+			<option value="night">暮色</option>
+		</select>
+		<div class="json">
+			<textarea id="iperf">
+64 bytes from 192.168.1.1: icmp_seq=0 ttl=64 time=9.922 ms
+64 bytes from 192.168.1.1: icmp_seq=1 ttl=64 time=9.852 ms
+64 bytes from 192.168.1.1: icmp_seq=2 ttl=64 time=9.753 ms
+64 bytes from 192.168.1.1: icmp_seq=3 ttl=64 time=9.894 ms
+64 bytes from 192.168.1.1: icmp_seq=4 ttl=64 time=9.789 ms
+64 bytes from 192.168.1.1: icmp_seq=5 ttl=64 time=9.785 ms
+64 bytes from 192.168.1.1: icmp_seq=6 ttl=64 time=8.708 ms
+64 bytes from 192.168.1.1: icmp_seq=7 ttl=64 time=10.122 ms
+64 bytes from 192.168.1.1: icmp_seq=8 ttl=64 time=10.657 ms
+64 bytes from 192.168.1.1: icmp_seq=9 ttl=64 time=9.288 ms
+64 bytes from 192.168.1.1: icmp_seq=10 ttl=64 time=5.327 ms
+64 bytes from 192.168.1.1: icmp_seq=11 ttl=64 time=9.828 ms
+64 bytes from 192.168.1.1: icmp_seq=12 ttl=64 time=10.023 ms
+64 bytes from 192.168.1.1: icmp_seq=13 ttl=64 time=10.045 ms
+64 bytes from 192.168.1.1: icmp_seq=14 ttl=64 time=10.075 ms
+64 bytes from 192.168.1.1: icmp_seq=15 ttl=64 time=10.260 ms
+64 bytes from 192.168.1.1: icmp_seq=16 ttl=64 time=9.909 ms
+64 bytes from 192.168.1.1: icmp_seq=17 ttl=64 time=10.075 ms
+64 bytes from 192.168.1.1: icmp_seq=18 ttl=64 time=9.912 ms
+64 bytes from 192.168.1.1: icmp_seq=19 ttl=64 time=9.681 ms
+64 bytes from 192.168.1.1: icmp_seq=20 ttl=64 time=9.882 ms
+64 bytes from 192.168.1.1: icmp_seq=21 ttl=64 time=9.729 ms
+64 bytes from 192.168.1.1: icmp_seq=22 ttl=64 time=9.747 ms
+64 bytes from 192.168.1.1: icmp_seq=23 ttl=64 time=9.848 ms
+64 bytes from 192.168.1.1: icmp_seq=24 ttl=64 time=9.850 ms
+64 bytes from 192.168.1.1: icmp_seq=25 ttl=64 time=9.735 ms
+64 bytes from 192.168.1.1: icmp_seq=26 ttl=64 time=10.367 ms
+64 bytes from 192.168.1.1: icmp_seq=27 ttl=64 time=9.776 ms
+64 bytes from 192.168.1.1: icmp_seq=28 ttl=64 time=9.706 ms
+64 bytes from 192.168.1.1: icmp_seq=29 ttl=64 time=9.859 ms
+64 bytes from 192.168.1.1: icmp_seq=30 ttl=64 time=9.619 ms
+64 bytes from 192.168.1.1: icmp_seq=31 ttl=64 time=9.636 ms
+64 bytes from 192.168.1.1: icmp_seq=32 ttl=64 time=9.589 ms
+64 bytes from 192.168.1.1: icmp_seq=33 ttl=64 time=9.903 ms
+64 bytes from 192.168.1.1: icmp_seq=34 ttl=64 time=9.689 ms
+64 bytes from 192.168.1.1: icmp_seq=35 ttl=64 time=9.756 ms
+64 bytes from 192.168.1.1: icmp_seq=36 ttl=64 time=9.874 ms
+64 bytes from 192.168.1.1: icmp_seq=37 ttl=64 time=7.048 ms
+64 bytes from 192.168.1.1: icmp_seq=38 ttl=64 time=6.305 ms
+64 bytes from 192.168.1.1: icmp_seq=39 ttl=64 time=6.300 ms
+64 bytes from 192.168.1.1: icmp_seq=40 ttl=64 time=8.808 ms
+64 bytes from 192.168.1.1: icmp_seq=41 ttl=64 time=9.578 ms
+64 bytes from 192.168.1.1: icmp_seq=42 ttl=64 time=9.277 ms
+64 bytes from 192.168.1.1: icmp_seq=43 ttl=64 time=9.788 ms
+64 bytes from 192.168.1.1: icmp_seq=44 ttl=64 time=9.602 ms
+64 bytes from 192.168.1.1: icmp_seq=45 ttl=64 time=9.860 ms
+64 bytes from 192.168.1.1: icmp_seq=46 ttl=64 time=9.669 ms
+64 bytes from 192.168.1.1: icmp_seq=47 ttl=64 time=9.680 ms
+64 bytes from 192.168.1.1: icmp_seq=48 ttl=64 time=9.853 ms
+64 bytes from 192.168.1.1: icmp_seq=49 ttl=64 time=9.698 ms
+64 bytes from 192.168.1.1: icmp_seq=50 ttl=64 time=9.715 ms
+64 bytes from 192.168.1.1: icmp_seq=51 ttl=64 time=9.796 ms
+64 bytes from 192.168.1.1: icmp_seq=52 ttl=64 time=10.087 ms
+64 bytes from 192.168.1.1: icmp_seq=53 ttl=64 time=6.195 ms
+64 bytes from 192.168.1.1: icmp_seq=54 ttl=64 time=9.576 ms
+64 bytes from 192.168.1.1: icmp_seq=55 ttl=64 time=9.857 ms
+64 bytes from 192.168.1.1: icmp_seq=56 ttl=64 time=9.807 ms
+64 bytes from 192.168.1.1: icmp_seq=57 ttl=64 time=9.841 ms
+64 bytes from 192.168.1.1: icmp_seq=58 ttl=64 time=10.010 ms
+64 bytes from 192.168.1.1: icmp_seq=59 ttl=64 time=9.688 ms
+64 bytes from 192.168.1.1: icmp_seq=60 ttl=64 time=9.700 ms
+64 bytes from 192.168.1.1: icmp_seq=61 ttl=64 time=9.786 ms
+64 bytes from 192.168.1.1: icmp_seq=62 ttl=64 time=9.735 ms
+64 bytes from 192.168.1.1: icmp_seq=63 ttl=64 time=10.286 ms
+64 bytes from 192.168.1.1: icmp_seq=64 ttl=64 time=9.946 ms
+64 bytes from 192.168.1.1: icmp_seq=65 ttl=64 time=10.416 ms
+64 bytes from 192.168.1.1: icmp_seq=66 ttl=64 time=9.896 ms
+64 bytes from 192.168.1.1: icmp_seq=67 ttl=64 time=9.641 ms
+64 bytes from 192.168.1.1: icmp_seq=68 ttl=64 time=15.482 ms
+64 bytes from 192.168.1.1: icmp_seq=69 ttl=64 time=9.706 ms
+64 bytes from 192.168.1.1: icmp_seq=70 ttl=64 time=9.676 ms
+64 bytes from 192.168.1.1: icmp_seq=71 ttl=64 time=9.997 ms
+64 bytes from 192.168.1.1: icmp_seq=72 ttl=64 time=9.968 ms
+64 bytes from 192.168.1.1: icmp_seq=73 ttl=64 time=10.131 ms
+64 bytes from 192.168.1.1: icmp_seq=74 ttl=64 time=12.787 ms
+64 bytes from 192.168.1.1: icmp_seq=75 ttl=64 time=5.043 ms
+64 bytes from 192.168.1.1: icmp_seq=76 ttl=64 time=9.976 ms
+64 bytes from 192.168.1.1: icmp_seq=77 ttl=64 time=9.883 ms
+64 bytes from 192.168.1.1: icmp_seq=78 ttl=64 time=9.785 ms
+64 bytes from 192.168.1.1: icmp_seq=79 ttl=64 time=9.678 ms
+64 bytes from 192.168.1.1: icmp_seq=80 ttl=64 time=6.176 ms
+64 bytes from 192.168.1.1: icmp_seq=81 ttl=64 time=6.190 ms
+64 bytes from 192.168.1.1: icmp_seq=82 ttl=64 time=9.308 ms
+64 bytes from 192.168.1.1: icmp_seq=83 ttl=64 time=10.181 ms
+64 bytes from 192.168.1.1: icmp_seq=84 ttl=64 time=10.954 ms
+64 bytes from 192.168.1.1: icmp_seq=85 ttl=64 time=9.965 ms
+64 bytes from 192.168.1.1: icmp_seq=86 ttl=64 time=10.301 ms
+64 bytes from 192.168.1.1: icmp_seq=87 ttl=64 time=9.814 ms
+64 bytes from 192.168.1.1: icmp_seq=88 ttl=64 time=10.431 ms
+64 bytes from 192.168.1.1: icmp_seq=89 ttl=64 time=9.933 ms
+64 bytes from 192.168.1.1: icmp_seq=90 ttl=64 time=9.744 ms
+64 bytes from 192.168.1.1: icmp_seq=91 ttl=64 time=9.781 ms
+64 bytes from 192.168.1.1: icmp_seq=92 ttl=64 time=9.711 ms
+64 bytes from 192.168.1.1: icmp_seq=93 ttl=64 time=10.082 ms
+64 bytes from 192.168.1.1: icmp_seq=94 ttl=64 time=9.797 ms
+64 bytes from 192.168.1.1: icmp_seq=95 ttl=64 time=7.943 ms
+64 bytes from 192.168.1.1: icmp_seq=96 ttl=64 time=6.725 ms
+64 bytes from 192.168.1.1: icmp_seq=97 ttl=64 time=9.959 ms
+64 bytes from 192.168.1.1: icmp_seq=98 ttl=64 time=10.723 ms
+64 bytes from 192.168.1.1: icmp_seq=99 ttl=64 time=10.009 ms
+64 bytes from 192.168.1.1: icmp_seq=100 ttl=64 time=10.652 ms
+64 bytes from 192.168.1.1: icmp_seq=101 ttl=64 time=10.215 ms
+64 bytes from 192.168.1.1: icmp_seq=102 ttl=64 time=10.038 ms
+64 bytes from 192.168.1.1: icmp_seq=103 ttl=64 time=10.096 ms
+64 bytes from 192.168.1.1: icmp_seq=104 ttl=64 time=10.751 ms
+64 bytes from 192.168.1.1: icmp_seq=105 ttl=64 time=10.444 ms
+64 bytes from 192.168.1.1: icmp_seq=106 ttl=64 time=11.878 ms
+64 bytes from 192.168.1.1: icmp_seq=107 ttl=64 time=4.225 ms
+64 bytes from 192.168.1.1: icmp_seq=108 ttl=64 time=9.975 ms
+64 bytes from 192.168.1.1: icmp_seq=109 ttl=64 time=9.882 ms
+64 bytes from 192.168.1.1: icmp_seq=110 ttl=64 time=10.762 ms
+64 bytes from 192.168.1.1: icmp_seq=111 ttl=64 time=11.945 ms
+64 bytes from 192.168.1.1: icmp_seq=112 ttl=64 time=10.988 ms
+64 bytes from 192.168.1.1: icmp_seq=113 ttl=64 time=10.234 ms
+64 bytes from 192.168.1.1: icmp_seq=114 ttl=64 time=17.423 ms
+64 bytes from 192.168.1.1: icmp_seq=115 ttl=64 time=53.808 ms
+64 bytes from 192.168.1.1: icmp_seq=116 ttl=64 time=110.934 ms
+64 bytes from 192.168.1.1: icmp_seq=117 ttl=64 time=23.331 ms
+64 bytes from 192.168.1.1: icmp_seq=118 ttl=64 time=205.123 ms
+64 bytes from 192.168.1.1: icmp_seq=119 ttl=64 time=111.522 ms
+64 bytes from 192.168.1.1: icmp_seq=120 ttl=64 time=16.430 ms
+64 bytes from 192.168.1.1: icmp_seq=121 ttl=64 time=83.127 ms
+64 bytes from 192.168.1.1: icmp_seq=122 ttl=64 time=7.715 ms
+64 bytes from 192.168.1.1: icmp_seq=123 ttl=64 time=59.136 ms
+64 bytes from 192.168.1.1: icmp_seq=124 ttl=64 time=135.926 ms
+64 bytes from 192.168.1.1: icmp_seq=125 ttl=64 time=47.294 ms
+64 bytes from 192.168.1.1: icmp_seq=126 ttl=64 time=111.859 ms
+64 bytes from 192.168.1.1: icmp_seq=127 ttl=64 time=24.712 ms
+64 bytes from 192.168.1.1: icmp_seq=128 ttl=64 time=87.505 ms
+64 bytes from 192.168.1.1: icmp_seq=129 ttl=64 time=3.230 ms
+64 bytes from 192.168.1.1: icmp_seq=130 ttl=64 time=63.236 ms
+64 bytes from 192.168.1.1: icmp_seq=131 ttl=64 time=137.323 ms
+64 bytes from 192.168.1.1: icmp_seq=132 ttl=64 time=48.480 ms
+64 bytes from 192.168.1.1: icmp_seq=133 ttl=64 time=115.994 ms
+64 bytes from 192.168.1.1: icmp_seq=134 ttl=64 time=28.034 ms
+64 bytes from 192.168.1.1: icmp_seq=135 ttl=64 time=92.006 ms
+64 bytes from 192.168.1.1: icmp_seq=136 ttl=64 time=3.658 ms
+64 bytes from 192.168.1.1: icmp_seq=137 ttl=64 time=67.090 ms
+64 bytes from 192.168.1.1: icmp_seq=138 ttl=64 time=3.507 ms
+64 bytes from 192.168.1.1: icmp_seq=141 ttl=64 time=3.795 ms
+64 bytes from 192.168.1.1: icmp_seq=142 ttl=64 time=4.678 ms
+64 bytes from 192.168.1.1: icmp_seq=143 ttl=64 time=4.460 ms
+64 bytes from 192.168.1.1: icmp_seq=144 ttl=64 time=4.328 ms
+64 bytes from 192.168.1.1: icmp_seq=145 ttl=64 time=4.330 ms
+64 bytes from 192.168.1.1: icmp_seq=146 ttl=64 time=4.290 ms
+64 bytes from 192.168.1.1: icmp_seq=147 ttl=64 time=4.307 ms
+64 bytes from 192.168.1.1: icmp_seq=148 ttl=64 time=4.314 ms
+64 bytes from 192.168.1.1: icmp_seq=149 ttl=64 time=4.247 ms
+64 bytes from 192.168.1.1: icmp_seq=150 ttl=64 time=4.274 ms
+64 bytes from 192.168.1.1: icmp_seq=151 ttl=64 time=4.347 ms
+64 bytes from 192.168.1.1: icmp_seq=152 ttl=64 time=4.391 ms
+64 bytes from 192.168.1.1: icmp_seq=153 ttl=64 time=4.282 ms
+64 bytes from 192.168.1.1: icmp_seq=154 ttl=64 time=4.335 ms
+64 bytes from 192.168.1.1: icmp_seq=155 ttl=64 time=4.212 ms
+64 bytes from 192.168.1.1: icmp_seq=156 ttl=64 time=4.332 ms
+64 bytes from 192.168.1.1: icmp_seq=157 ttl=64 time=4.793 ms
+64 bytes from 192.168.1.1: icmp_seq=158 ttl=64 time=4.331 ms
+64 bytes from 192.168.1.1: icmp_seq=159 ttl=64 time=4.432 ms
+64 bytes from 192.168.1.1: icmp_seq=160 ttl=64 time=4.949 ms
+64 bytes from 192.168.1.1: icmp_seq=161 ttl=64 time=4.046 ms
+64 bytes from 192.168.1.1: icmp_seq=162 ttl=64 time=4.368 ms
+64 bytes from 192.168.1.1: icmp_seq=163 ttl=64 time=4.187 ms
+64 bytes from 192.168.1.1: icmp_seq=164 ttl=64 time=4.328 ms
+64 bytes from 192.168.1.1: icmp_seq=165 ttl=64 time=4.356 ms
+64 bytes from 192.168.1.1: icmp_seq=166 ttl=64 time=4.331 ms
+64 bytes from 192.168.1.1: icmp_seq=167 ttl=64 time=4.262 ms
+64 bytes from 192.168.1.1: icmp_seq=168 ttl=64 time=4.374 ms
+64 bytes from 192.168.1.1: icmp_seq=169 ttl=64 time=4.323 ms
+64 bytes from 192.168.1.1: icmp_seq=170 ttl=64 time=4.321 ms
+64 bytes from 192.168.1.1: icmp_seq=171 ttl=64 time=4.402 ms
+			</textarea>
+			<button onclick="applyData()">应用数据</button>
+		</div>
+	</div>
+	<script>
+		Array.prototype.randomSort = function () {
+			const sortedArray = this.map(i => ({ v: i, k: Math.random() })).sort((a, b) => a.k - b.k).map(i => i.v);
+			return sortedArray;
+		};
+
+		const themeSand = {
+			chart: { width: 650, height: 400, backgroundColor: null, type: 'spline' },
+			credits: { text: 'made by 可爱的排骨', style: { fontSize: '12px' }, position: { verticalAlign: 'top', x: -50, y: 20 } },
+			title: { align: 'left', x: 30, style: { color: '#303030' } },
+			xAxis: { visible: false },
+			yAxis: [{ title: { text: '(ms)' }, min: 0 }, { title: { text: '' }, linkedTo: 0, opposite: true }],
+			plotOptions: { spline: { lineWidth: 3, marker: { enabled: false } }, series: { animation: { duration: 5000 }, shadow: true, enableMouseTracking: false } },
+			colors: ['#f45b5b', '#8085e9', '#8d4654', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee', '#55BF3B', '#DF5353', '#7798BF']
+		};
+		const themeDark = {
+			chart: { width: 650, height: 400, backgroundColor: '#3e3e40', type: 'spline' },
+			credits: { text: 'made by 可爱的排骨', style: { fontSize: '12px' }, position: { verticalAlign: 'top', x: -50, y: 20 } },
+			title: { align: 'left', x: 30, style: { color: '#E0E0E3' } },
+			legend: { itemStyle: { color: '#999' } },
+			xAxis: { visible: false },
+			yAxis: [{ title: { text: '(Mbps)' }, min: 0 }, { labels: { style: { color: '#999' } }, gridLineColor: '#999', title: { text: '' }, linkedTo: 0, opposite: true }],
+			plotOptions: { spline: { lineWidth: 3, marker: { enabled: false } }, series: { animation: { duration: 5000 }, shadow: { color: '#fff' }, enableMouseTracking: false } },
+			colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee', '#55BF3B', '#DF5353', '#7798BF'],
+			navigation: { buttonOptions: { symbolStroke: '#DDDDDD', theme: { fill: '#505053' } } }
+		};
+
+		let chart1;
+
+		const createChart = (data) => {
+			console.log(data);
+			if (chart1) {
+				clearTimeout(chart1.timeout);
+				chart1.destroy();
+			}
+
+			const theme = document.getElementById('theme').value === 'sand' ? themeSand : themeDark;
+			const colors = theme.colors.randomSort();
+
+			Highcharts.setOptions(theme);
+			chart1 = Highcharts.chart('container1', {
+				title: { text: `AX3 Pro <-> K2P 漫游测试` },
+				colors,
+				series: [{ name: 'ping', data }]
+			});
+		};
+
+		const updateSeriesName = (series) => {
+			// let avg = series.yData.reduce((a, c) => a + c, 0) / series.yData.length;
+			// series.update({ name: `${series.name}: ${avg.toFixed(1)}Mbps` }, false);
+		};
+
+		const applyData = () => {
+			const text = document.getElementById('iperf').value;
+			const lines = text.split('\n').filter(l => l.trim().length > 0);
+			const values = [];
+
+			for (let i = 1; i < lines.length; i++) {
+				const line = lines[i].trim();
+				const index = line.lastIndexOf('=');
+				const latency = line.slice(line.lastIndexOf('=') + 1, line.lastIndexOf('ms'));
+				values.push(parseFloat(latency));
+			}
+
+			createChart(values);
+		};
+	</script>
+</body>
+
+</html>
