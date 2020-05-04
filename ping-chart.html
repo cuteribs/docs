@@ -98,6 +98,7 @@
 		</select>
 		<div class="json">
 			<textarea id="iperf">
+AX3 Pro <-> K2P 漫游测试
 64 bytes from 192.168.1.1: icmp_seq=0 ttl=64 time=9.922 ms
 64 bytes from 192.168.1.1: icmp_seq=1 ttl=64 time=9.852 ms
 64 bytes from 192.168.1.1: icmp_seq=2 ttl=64 time=9.753 ms
@@ -301,7 +302,7 @@
 
 		let chart1;
 
-		const createChart = (data) => {
+		const createChart = (title, data) => {
 			console.log(data);
 			if (chart1) {
 				clearTimeout(chart1.timeout);
@@ -313,7 +314,7 @@
 
 			Highcharts.setOptions(theme);
 			chart1 = Highcharts.chart('container1', {
-				title: { text: `AX3 Pro <-> K2P 漫游测试` },
+				title: { text: title },
 				colors,
 				series: [{ name: 'ping', data }]
 			});
@@ -327,16 +328,16 @@
 		const applyData = () => {
 			const text = document.getElementById('iperf').value;
 			const lines = text.split('\n').filter(l => l.trim().length > 0);
-			const values = [];
+			const title = lines[0];
+			const data = [];
 
 			for (let i = 1; i < lines.length; i++) {
 				const line = lines[i].trim();
-				const index = line.lastIndexOf('=');
 				const latency = line.slice(line.lastIndexOf('=') + 1, line.lastIndexOf('ms'));
-				values.push(parseFloat(latency));
+				data.push(parseFloat(latency));
 			}
 
-			createChart(values);
+			createChart(title, data);
 		};
 	</script>
 </body>
