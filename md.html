@@ -46,6 +46,11 @@
 			<div v-html="compiledMarkdown" @dblclick="select"></div>
 		</div>
 		<script>
+			marked.use({ renderer: {
+				codespan: (src) => `<strong>${src}</strong>`
+			}});
+
+
 			new Vue({
 				el: '#editor',
 				data: {
