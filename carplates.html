@@ -23,6 +23,7 @@
 
 		#result li {
 			margin-right: 10px;
+			cursor: pointer;
 		}
 
 		#result .c1 {
@@ -31,6 +32,10 @@
 
 		#result .c2 {
 			color: #00f;
+		}
+
+		#result .c3 {
+			font-size: 0.6rem;
 		}
 	</style>
 	<script>
@@ -58,12 +63,17 @@
 			return true;
 		}
 		function reload() {
+			const dateFrom = document.querySelector('#dateFrom').value;
+			console.log('dateFrom', dateFrom);
+
 			const excludes = document.querySelector('#excludes').value.split('').filter(c => c.trim().length > 0);
 			console.log('excludes', excludes);
-			let result = codePool.map(c => generateCode(c.range))
+
+			let result = codePool.filter(r => r.date.slice(0, 4) >= dateFrom)
+				.map(r => generateCode(r.range).map(c => ({ code: c, date: r.date.slice(0, 4) })))
 				.flat()
 				.filter(c => {
-					const arr = c.slice(1).split('');
+					const arr = c.code.slice(1).split('');
 
 					for (let i of arr) {
 						if (excludes.includes(i)) return false;
@@ -84,16 +94,14 @@
 				const [b1, b2] = pattern.map((c, i) => c == 'B' ? i + 1 : null).filter(i => i != null);
 				console.log(zIndex, [a1, a2], [b1, b2]);
 
-				result = result.filter(c => c.charAt(zIndex).isAlphabet());
-				result = result.filter(c => c.charAt(a1) == c.charAt(a2) && c.charAt(b1) == c.charAt(b2));
+				result = result.filter(c => c.code.charAt(zIndex).isAlphabet());
+				result = result.filter(c => c.code.charAt(a1) == c.code.charAt(a2) && c.code.charAt(b1) == c.code.charAt(b2));
 			} else if (wildcard && wildcard.length == 5) {
 				// wildcard
 				result = result.filter(c => {
-					if (c.slice(1, 3) == '19') debugger;
-
 					for (let i = 0; i < wildcard.length; i++) {
 						const card = wildcard[i];
-						const char = c.charAt(i + 1);
+						const char = c.code.charAt(i + 1);
 
 						if (card != '*') {
 							if (card == 'Z' && char.isNumber()) return false;
@@ -109,8 +117,8 @@
 				return;
 			}
 
-			const html = result.map(r => `<li><span class="c1">${r.slice(0, 1)}</span>
-				${r.slice(1).split('').map(c => c.isNumber() ? c : `<span class="c2">${c}</span>`).join('')}</li>`).join('\n');
+			const html = result.map(r => `<li title="${r.date}"><span class="c1">${r.code.slice(0, 1)}</span>
+				${r.code.slice(1).split('').map(c => c.isNumber() ? c : `<span class="c2">${c}</span>`).join('')} <span class="c3">${r.date}</span></li>`).join('\n');
 			document.querySelector('#result').innerHTML = html;
 		}
 		function reloadExcludes() {
@@ -147,6 +155,14 @@
 		run();
 	</script>
 	<div class="filters">
+		<select id="dateFrom" onchange="reload()">
+			<option>2021</option>
+			<option>2020</option>
+			<option>2019</option>
+			<option>2018</option>
+			<option>2017</option>
+			<option>2016</option>
+		</select>
 		<input id="excludes" placeholder="排除的字符" value="E I O P R S 4" onchange="reloadExcludes()" />
 		<select id="pattern" onchange="reloadPattern()">
 			<option></option>
