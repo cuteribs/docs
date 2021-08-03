@@ -1,0 +1,126 @@
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+	<style>
+		html,
+		body,
+		* {
+			font-family: monospace;
+			font-size: 1.1rem;
+		}
+
+		#result {
+			height: 90%;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			list-style: none;
+		}
+
+		#result li {
+			margin-right: 10px;
+		}
+
+		#result .c1 {
+			color: #0009;
+		}
+
+		#result .c2 {
+			color: #00f;
+		}
+	</style>
+	<script>
+		const codePool = [];
+
+		function reload() {
+			const excludes = document.querySelector('#excludes').value.split(' ');
+			let result = codePool.filter(c => {
+				const arr = c.range.slice(1).split('');
+
+				for(let i of arr) {
+					if(excludes.includes(i)) return false;
+				}
+
+				return true;
+			}).map(c => generateCode(c.range)).flat();
+			const pattern = document.querySelector('#pattern').value.split('');
+			console.log(pattern);
+
+			if (!pattern || pattern.length != 5) {
+				document.querySelector('#result').innerHTML = '';
+				return;
+			}
+
+			const zIndex = pattern.indexOf('Z') + 1;
+			const [a1, a2] = pattern.map((c, i) => c == 'A' ? i + 1 : null).filter(i => i != null);
+			const [b1, b2] = pattern.map((c, i) => c == 'B' ? i + 1 : null).filter(i => i != null);
+			console.log(zIndex, [a1, a2], [b1, b2]);
+
+			result = result.filter(c => !(Number(c.charAt(zIndex)) < 10));
+			result = result.filter(c => c.charAt(a1) == c.charAt(a2) && c.charAt(b1) == c.charAt(b2));
+			const html = result.map(r => `<li><span class="c1">${r.slice(0, 1)}</span>
+				${r.slice(1).split('').map(c => Number(c) < 10 ? c : `<span class="c2">${c}</span>`).join('')}</li>`).join('\n');
+			document.querySelector('#result').innerHTML = html;
+		}
+		function generateCode(range) {
+			const chars = range.slice(1);
+			const codes = [];
+
+			for (let i = 0; i < 100; i++) {
+				const [c1, c2] = i.toString().padStart(2, '0').split('');
+				const code = range.slice(0, 1) + chars.replace('*', c1).replace('*', c2);
+				codes.push(code);
+			}
+
+			return codes;
+		}
+		async function run() {
+			const res = await fetch('carplates.json');
+			const data = await res.json();
+			codePool.splice(0, 0, ...data);
+			console.log(codePool.length);
+			reload();
+		}
+		run();
+	</script>
+	<div class="filters">
+		<input id="excludes" placeholder="排除的字符" value="E I O P R S 4" />
+		<select id="pattern" onchange="reload()">
+			<option></option>
+			<optgroup label="AABB">
+				<option>ZAABB</option>
+				<option>AZABB</option>
+				<option>AAZBB</option>
+				<option>AABZB</option>
+				<option>AABBZ</option>
+			</optgroup>
+			<optgroup label="ABAB">
+				<option>ZABAB</option>
+				<option>AZBAB</option>
+				<option>ABZAB</option>
+				<option>ABAZB</option>
+				<option>ABABZ</option>
+			</optgroup>
+			<!--
+			<optgroup label="ABCD">
+				<option>ZABCD</option>
+				<option>AZBCD</option>
+				<option>ABZCD</option>
+				<option>ABCZD</option>
+				<option>ABCDZ</option>
+			</optgroup>
+			-->
+		</select>
+		&nbsp; &nbsp; &nbsp; &nbsp;
+		<!--
+		<input maxlength="5" style="text-transform:uppercase" id="wildcard" onchange="reload()">
+			-->
+	</div>
+	<ul id="result"></ul>
+</body>
+
+</html>
