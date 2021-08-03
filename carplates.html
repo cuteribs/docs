@@ -36,35 +36,94 @@
 	<script>
 		const codePool = [];
 
+		String.prototype.isNumber = function () {
+			return !isNaN(this);
+			/*
+			for (let c of Array.from(this)) {
+				const code = c.charCodeAt(0);
+
+				if (code < 48 || code > 57) return false;
+			}
+
+			return true;
+			*/
+		}
+		String.prototype.isAlphabet = function () {
+			for (let c of Array.from(this)) {
+				const code = c.charCodeAt(0);
+
+				if (code < 65 || (code > 90 && code < 97) || code > 122) return false;
+			}
+
+			return true;
+		}
 		function reload() {
-			const excludes = document.querySelector('#excludes').value.split(' ');
-			let result = codePool.filter(c => {
-				const arr = c.range.slice(1).split('');
+			const excludes = document.querySelector('#excludes').value.split('').filter(c => c.trim().length > 0);
+			console.log('excludes', excludes);
+			let result = codePool.map(c => generateCode(c.range))
+				.flat()
+				.filter(c => {
+					const arr = c.slice(1).split('');
 
-				for(let i of arr) {
-					if(excludes.includes(i)) return false;
-				}
+					for (let i of arr) {
+						if (excludes.includes(i)) return false;
+					}
 
-				return true;
-			}).map(c => generateCode(c.range)).flat();
+					return true;
+				});
+
 			const pattern = document.querySelector('#pattern').value.split('');
-			console.log(pattern);
+			console.log('pattern', pattern);
+			const wildcard = document.querySelector('#wildcard').value.split('');
+			console.log('wildcard', wildcard);
 
-			if (!pattern || pattern.length != 5) {
+			if (pattern && pattern.length == 5) {
+				// pattern
+				const zIndex = pattern.indexOf('Z') + 1;
+				const [a1, a2] = pattern.map((c, i) => c == 'A' ? i + 1 : null).filter(i => i != null);
+				const [b1, b2] = pattern.map((c, i) => c == 'B' ? i + 1 : null).filter(i => i != null);
+				console.log(zIndex, [a1, a2], [b1, b2]);
+
+				result = result.filter(c => c.charAt(zIndex).isAlphabet());
+				result = result.filter(c => c.charAt(a1) == c.charAt(a2) && c.charAt(b1) == c.charAt(b2));
+			} else if (wildcard && wildcard.length == 5) {
+				// wildcard
+				result = result.filter(c => {
+					if (c.slice(1, 3) == '19') debugger;
+
+					for (let i = 0; i < wildcard.length; i++) {
+						const card = wildcard[i];
+						const char = c.charAt(i + 1);
+
+						if (card != '*') {
+							if (card == 'Z' && char.isNumber()) return false;
+
+							if (card.isNumber() && card != char) return false;
+						}
+					}
+
+					return true;
+				});
+			} else {
 				document.querySelector('#result').innerHTML = '';
 				return;
 			}
 
-			const zIndex = pattern.indexOf('Z') + 1;
-			const [a1, a2] = pattern.map((c, i) => c == 'A' ? i + 1 : null).filter(i => i != null);
-			const [b1, b2] = pattern.map((c, i) => c == 'B' ? i + 1 : null).filter(i => i != null);
-			console.log(zIndex, [a1, a2], [b1, b2]);
-
-			result = result.filter(c => !(Number(c.charAt(zIndex)) < 10));
-			result = result.filter(c => c.charAt(a1) == c.charAt(a2) && c.charAt(b1) == c.charAt(b2));
 			const html = result.map(r => `<li><span class="c1">${r.slice(0, 1)}</span>
-				${r.slice(1).split('').map(c => Number(c) < 10 ? c : `<span class="c2">${c}</span>`).join('')}</li>`).join('\n');
+				${r.slice(1).split('').map(c => c.isNumber() ? c : `<span class="c2">${c}</span>`).join('')}</li>`).join('\n');
 			document.querySelector('#result').innerHTML = html;
+		}
+		function reloadExcludes() {
+			reload();
+		}
+		function reloadPattern() {
+			document.querySelector('#wildcard').value = '';
+			reload();
+		}
+		function reloadWildcard() {
+			document.querySelector('#pattern').selectedIndex = 0;
+			const wildcard = document.querySelector('#wildcard').value.split('').filter(c => c.trim().length > 0);
+			if (wildcard.length == 5) reload();
 		}
 		function generateCode(range) {
 			const chars = range.slice(1);
@@ -88,22 +147,18 @@
 		run();
 	</script>
 	<div class="filters">
-		<input id="excludes" placeholder="排除的字符" value="E I O P R S 4" />
-		<select id="pattern" onchange="reload()">
+		<input id="excludes" placeholder="排除的字符" value="E I O P R S 4" onchange="reloadExcludes()" />
+		<select id="pattern" onchange="reloadPattern()">
 			<option></option>
 			<optgroup label="AABB">
-				<option>ZAABB</option>
 				<option>AZABB</option>
 				<option>AAZBB</option>
 				<option>AABZB</option>
-				<option>AABBZ</option>
 			</optgroup>
 			<optgroup label="ABAB">
-				<option>ZABAB</option>
 				<option>AZBAB</option>
 				<option>ABZAB</option>
 				<option>ABAZB</option>
-				<option>ABABZ</option>
 			</optgroup>
 			<!--
 			<optgroup label="ABCD">
@@ -116,9 +171,7 @@
 			-->
 		</select>
 		&nbsp; &nbsp; &nbsp; &nbsp;
-		<!--
-		<input maxlength="5" style="text-transform:uppercase" id="wildcard" onchange="reload()">
-			-->
+		<input maxlength="5" style="text-transform:uppercase" placeholder="91*Z1" id="wildcard" onchange="reloadWildcard()">
 	</div>
 	<ul id="result"></ul>
 </body>
