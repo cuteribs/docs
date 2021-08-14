@@ -1,0 +1,31 @@
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+		#cookies {
+			width: 30rem;
+			height: 30rem;
+		}
+	</style>
+</head>
+
+<body>
+	<input id="name" onchange="generate()" value="Fruit" />
+	<input id="count" type="number" onchange="generate()" value="10" />
+	<pre id="result"></pre>
+
+	<script>
+		function generate() {
+			const name = document.querySelector('#name').value;
+			const count = Number(document.querySelector('#count').value);
+			const a = Array(count).fill().map((_, i) => `My${name}${i + 1}=""`).join('\n');
+			const b = Array(count).fill().map((_, i) => '${' + `My${name}${i + 1}` + '}').join('@');
+			const c = Array(count).fill().map((_, i) => `ForOther${name}${i + 1}="${b}"`).join('\n');
+
+			document.querySelector('#result').innerHTML = a + '\n\n' + c;
+		}
+	</script>
+</body>
+
+</html>
