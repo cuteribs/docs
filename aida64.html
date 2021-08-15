@@ -106,63 +106,88 @@
 
 <body>
 	<div id="panel">
-		<span id="SCPUUTI" class="circle"></span>
-		<span id="TCPU" class="circle"></span>
-		<span id="SGPU1UTI" class="circle"></span>
-		<span id="TGPU1DIOD" class="circle"></span>
-		<span id="SMEMUTI" class="circle"></span>
+		<span id="SCPUUTI" class="circle" unit=""></span>
+		<span id="TCPU" class="circle" unit=""></span>
+		<span id="SGPU1UTI" class="circle" unit=""></span>
+		<span id="TGPU1DIOD" class="circle" unit=""></span>
+		<span id="SMEMUTI" class="circle" unit=""></span>
 
-		<span id="SNIC4ULRATE" class="unit"></span>
-		<span id="SNIC4DLRATE" class="unit"></span>
+		<span id="SNIC4ULRATE" class="" unit="KB/s"></span>
+		<span id="SNIC4DLRATE" class="" unit="KB/s"></span>
 
-		<span id="THDD1" class="label celsius"></span>
+		<span id="THDD1" class="label" unit="&#8451;"></span>
 		<!-- <span id="THDD3" class="center"></span>
 		<span id="THDD3TS2" class="center"></span> -->
-		<span id="FCPU" class="label unit"></span>
-		<span id="FGPU1" class="label unit"></span>
-		<span id="FCHA" class="label unit"></span>
+		<span id="FCPU" class="label" unit="RPM"></span>
+		<span id="FGPU1" class="label" unit="RPM"></span>
+		<span id="FCHA" class="label" unit="RPM"></span>
 	</div>
 	<script>
+		const apiHost = '192.168.6.91:5550';
 		const sensors = Array.from(document.querySelectorAll('#panel span')).map(el => ({ el, id: el.id }));
 
 		function apiCallback(data) {
 			console.log('data', JSON.stringify(data));
-			for (let sensor of sensors) {
-				const value = data[sensor.id];
-				let html = value.value;
+			for (let i in sensors) {
+				const sensor = sensors[i];
+				const element = sensor.el;
+				const item = data[i];
+				let html = item.value;
 
-				if (sensor.el.classList.contains('label')) html = `${value.label}: ${value.value}`;
+				if (element.classList.contains('label')) html = `${item.label} ${item.value}`;
 
-				if (sensor.el.classList.contains('unit')) html += ' ' + value.unit;
-				else if (sensor.el.classList.contains('celsius')) html += ' &#8451;';
+				if (element.hasAttribute('unit')) html += ' ' + element.getAttribute('unit');
 
-				sensor.el.innerHTML = html
+				element.innerHTML = html
 			}
 		}
 
-		function fetchData() {
-			const script = document.createElement('script');
-			const nonce = Date.now().toString();
-			const func = 'callback' + nonce;
-			window[func] = apiCallback;
-			script.src = `http://192.168.6.1:5550/api?nonce=${nonce}&callback=${func}&sensors=${sensors.map(s => s.id).join(',')}`;
-			document.body.appendChild(script);
-
-			script.onload = e => {
-				e.currentTarget.remove();
-				delete window[func];
+		if (window.EventSource) {
+			const parseData = function (rawData) {
+				const data = rawData.split('{|}').slice(1).map((s, i) => {
+					const line = s.slice(s.indexOf('|') + 1);
+					const gapIndex = line.lastIndexOf(' ');
+					const label = line.slice(0, gapIndex);
+					const value = line.slice(gapIndex + 1);
+					return { label, value };
+				});
+				apiCallback(data);
 			};
 
-			script.onerror = e => {
-				e.currentTarget.remove();
-				delete window[func];
-			};
+			const source = new EventSource(`http://${apiHost}/sse`);
+			source.addEventListener('message', e => parseData(e.data));
+			source.addEventListener('slide', e => console.log('slide', e.data), false);
+			source.addEventListener('error', e => console.log('error', e.target.readyState), false);
+		} else {
+			function fetchJsonp() {
+				const script = document.createElement('script');
+				const nonce = Date.now().toString();
+				const func = 'callback' + nonce;
+				window[func] = apiCallback;
+				script.src = `http://${apiHost}/api?nonce=${nonce}&callback=${func}&sensors=${sensors.map(s => s.id).join(',')}`;
+				document.body.appendChild(script);
 
-			setTimeout(fetchData, 3000);
+				script.onload = e => {
+					e.currentTarget.remove();
+					delete window[func];
+				};
+
+				script.onerror = e => {
+					e.currentTarget.remove();
+					delete window[func];
+				};
+
+				setTimeout(fetchJsonp, 3000);
+			}
+
+			fetchJsonp();
 		}
-
-		fetchData();
 	</script>
 </body>
 
 </html>
+
+Page0|{|}Simple1|CPU Utilization 2%{|}Simple2|CPU 41C{|}Simple3|GPU Utilization 0%{|}Simple4|GPU Diode (DispIO)
+43C{|}Simple5|Memory Utilization 19%{|}Simple6|NIC4 Upload Rate 0.2 KB/s{|}Simple7|NIC4 Download Rate 0.9
+KB/s{|}Simple8|Samsung SSD 850 EVO 250GB 43癈{|}Simple9|CPU 986 RPM{|}Simple10|GPU 1611 RPM{|}Simple11|Chassis 1000
+RPM{|}
