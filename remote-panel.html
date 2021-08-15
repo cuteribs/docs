@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+		body {
+			background-color: #000;
+			margin: 0;
+			padding: 0;
+		}
+
+		#panel {
+			background-image: url("bg.jpg");
+			width: 1024px;
+			height: 600px;
+		}
+
+		#panel>span {
+			display: block;
+			position: absolute;
+		}
+
+		.circle {
+			text-align: center;
+			width: 134px;
+			line-height: 134px;
+			font-size: 50px;
+			font-weight: bold;
+		}
+
+		#SCPUUTI {
+			left: 180px;
+			top: 104px;
+		}
+
+		#TCPU {
+			left: 330px;
+			top: 104px;
+		}
+
+		#SGPU1UTI {
+			left: 684px;
+			top: 104px;
+		}
+
+		#TGPU1DIOD {
+			left: 834px;
+			top: 104px;
+		}
+
+		#SMEMUTI {
+			left: 684px;
+			top: 376px;
+		}
+
+		#SNIC4ULRATE {
+			left: 900px;
+			top: 485px;
+			width: 96px;
+			text-align: right;
+		}
+
+		#SNIC4DLRATE {
+			left: 900px;
+			top: 545px;
+			width: 96px;
+			text-align: right;
+		}
+
+		#THDD1 {
+			left: 175px;
+			top: 308px;
+			width: 295px;
+			line-height: 58px;
+			text-align: right;
+		}
+
+		#FCPU {
+			left: 175px;
+			top: 445px;
+			width: 295px;
+			line-height: 58px;
+			text-align: right;
+		}
+
+		#FGPU1 {
+			left: 175px;
+			top: 470px;
+			width: 295px;
+			line-height: 58px;
+			text-align: right;
+		}
+
+		#FCHA {
+			left: 175px;
+			top: 495px;
+			width: 295px;
+			line-height: 58px;
+			text-align: right;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="panel">
+		<span id="SCPUUTI" class="circle"></span>
+		<span id="TCPU" class="circle"></span>
+		<span id="SGPU1UTI" class="circle"></span>
+		<span id="TGPU1DIOD" class="circle"></span>
+		<span id="SMEMUTI" class="circle"></span>
+
+		<span id="SNIC4ULRATE" class="unit"></span>
+		<span id="SNIC4DLRATE" class="unit"></span>
+
+		<span id="THDD1" class="label celsius"></span>
+		<!-- <span id="THDD3" class="center"></span>
+		<span id="THDD3TS2" class="center"></span> -->
+		<span id="FCPU" class="label unit"></span>
+		<span id="FGPU1" class="label unit"></span>
+		<span id="FCHA" class="label unit"></span>
+	</div>
+	<script>
+		const sensors = Array.from(document.querySelectorAll('#panel span')).map(el => ({ el, id: el.id }));
+
+		function apiCallback(data) {
+			console.log('data', JSON.stringify(data));
+			for (let sensor of sensors) {
+				const value = data[sensor.id];
+				let html = value.value;
+
+				if (sensor.el.classList.contains('label')) html = `${value.label}: ${value.value}`;
+
+				if (sensor.el.classList.contains('unit')) html += ' ' + value.unit;
+				else if (sensor.el.classList.contains('celsius')) html += ' &#8451;';
+
+				sensor.el.innerHTML = html
+			}
+		}
+
+		function fetchData() {
+			const script = document.createElement('script');
+			const nonce = Date.now().toString();
+			const func = 'callback' + nonce;
+			window[func] = apiCallback;
+			script.src = `http://vnas.cuteribs.com:55555/api?nonce=${nonce}&callback=${func}&sensors=${sensors.map(s => s.id).join(',')}`;
+			document.body.appendChild(script);
+
+			script.onload = e => {
+				e.currentTarget.remove();
+				delete window[func];
+			};
+
+			script.onerror = e => {
+				e.currentTarget.remove();
+				delete window[func];
+			};
+
+			setTimeout(fetchData, 3000);
+		}
+
+		fetchData();
+	</script>
+</body>
+
+</html>
