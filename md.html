@@ -31,48 +31,32 @@
 				padding: 20px;
 			}
 
+			img {
+				max-width: 90%;
+			}
 			code {
 				color: #f66;
 			}
 		</style>
-		<script src="https://unpkg.com/vue"></script>
-		<script src="marked.cjs"></script>
-		<script src="https://unpkg.com/lodash"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 	</head>
 
 	<body>
 		<div id="editor">
-			<textarea :value="input" @input="update"></textarea>
-			<div v-html="compiledMarkdown" @dblclick="select"></div>
+			<textarea id="input"></textarea>
+			<div id="output"></div>
 		</div>
 		<script>
 			marked.use({ renderer: {
 				codespan: (src) => `<strong>${src}</strong>`
 			}});
 
+			const input = document.querySelector('#input');
+			const output = document.querySelector('#output');
 
-			new Vue({
-				el: '#editor',
-				data: {
-					input: '# hello'
-				},
-				computed: {
-					compiledMarkdown: function() {
-						return marked(this.input, { sanitize: true });
-					}
-				},
-				methods: {
-					update: _.debounce(function(e) {
-						this.input = e.target.value;
-					}, 300),
-					select: e => {
-						console.log(e.target);
-						const range = document.createRange();
-						range.selectNode(e.target);
-						window.getSelection().removeAllRanges();
-						window.getSelection().addRange(range);
-					}
-				}
+			input.addEventListener('change', e => {
+				const html = marked.parse(input.value);
+				output.innerHTML = html;
 			});
 		</script>
 	</body>
